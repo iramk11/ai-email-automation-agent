@@ -75,3 +75,6 @@ Thumbs.db
 models/
 embeddings/
 vector_db/
+llama_index/
+__pycache__/
+*.pyc
