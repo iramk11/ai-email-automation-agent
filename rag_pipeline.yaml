@@ -1,0 +1,15 @@
+# rag_pipeline.yaml
+apiVersion: vertexai.googleapis.com/v1
+kind: PipelineJob
+displayName: rag-email-pipeline
+labels:
+  purpose: email-auto-reply
+  env: dev
+runtimeConfig:
+  gcsOutputDirectory: gs://rag-email-data/pipeline-outputs/
+  parameterValues:
+    input_csv_path: gs://rag-email-data/inputs/student_email_pairs.csv
+    input_labels_path: gs://rag-email-data/inputs/student_email_pairs.labels.jsonl
+    output_reply_path: gs://rag-email-data/outputs/reply.json
+    prompt_type: "student"
+    vector_search_index_id: "your-index-id"

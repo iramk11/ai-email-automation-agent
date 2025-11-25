@@ -1,0 +1,17 @@
+/**
+ * Styles for content script elements injected into Gmail
+ */
+
+#rag-generate-reply-btn {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif !important;
+}
+
+#rag-generate-reply-btn:active {
+    transform: translateY(0) !important;
+}
+
+#rag-generate-reply-btn:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+

@@ -1,0 +1,53 @@
+To create icons for your extension:
+
+Option 1: Use online tool
+- Visit https://favicon.io/favicon-generator/
+- Choose robot emoji 🤖 or create custom
+- Download and rename to icon16.png, icon48.png, icon128.png
+
+Option 2: Use Python (requires Pillow)
+pip install pillow
+python3 << 'PYTHON'
+from PIL import Image, ImageDraw, ImageFont
+import os
+
+def create_icon(size, filename):
+    # Create image with gradient background
+    img = Image.new('RGB', (size, size), color='#667eea')
+    draw = ImageDraw.Draw(img)
+    
+    # Draw circle
+    margin = size // 8
+    draw.ellipse([margin, margin, size-margin, size-margin], fill='#764ba2')
+    
+    # Add text
+    try:
+        font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", size // 2)
+    except:
+        font = None
+    
+    text = "AI"
+    if font:
+        bbox = draw.textbbox((0, 0), text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+    else:
+        text_width, text_height = size // 3, size // 3
+    
+    position = ((size - text_width) // 2, (size - text_height) // 2 - size // 10)
+    draw.text(position, text, fill='white', font=font)
+    
+    img.save(filename)
+    print(f"Created {filename}")
+
+create_icon(16, 'icon16.png')
+create_icon(48, 'icon48.png')
+create_icon(128, 'icon128.png')
+PYTHON
+
+Option 3: Manually create
+- Use any image editor (Photoshop, GIMP, Figma)
+- Create 16x16, 48x48, 128x128 PNG images
+- Save as icon16.png, icon48.png, icon128.png in this folder
+
+The extension will work without icons but show default Chrome icon.

@@ -16,44 +16,15 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
-
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
 
 # Virtual environments
-.env
-.venv
-env/
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
-email-agent/
+.venv
 
 # IDEs
 .vscode/
@@ -62,20 +33,31 @@ email-agent/
 *.swo
 *~
 
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Qdrant data
+qdrant_data/
+*.gpickle
+
+# Logs
+*.log
+logs/
+
 # OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Project specific
-*.log
-models/
-embeddings/
-vector_db/
-llama_index/
-__pycache__/
-*.pyc
+# Chrome extension (if packed)
+chrome-extension/*.crx
+chrome-extension/*.pem
+
+# Test outputs
+test_output/
+*.test
+
+# Temporary files
+tmp/
+temp/
+*.tmp
