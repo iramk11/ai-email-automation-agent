@@ -84,6 +84,40 @@ class GraphService:
         
         return list(set(successors + predecessors))
     
+    def get_relationships(self, node_name: str) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Get relationships (edges) for a node with their types.
+        
+        Args:
+            node_name: Name of the node
+            
+        Returns:
+            Dictionary with 'outgoing' and 'incoming' relationships
+            Each relationship includes: target/source node, relation type, and email_id if available
+        """
+        if node_name not in self.graph:
+            return {"outgoing": [], "incoming": []}
+        
+        outgoing = []
+        for successor in self.graph.successors(node_name):
+            edge_data = self.graph.get_edge_data(node_name, successor, {})
+            outgoing.append({
+                "node": successor,
+                "relation": edge_data.get("relation", "CONNECTED"),
+                "email_id": edge_data.get("email_id")
+            })
+        
+        incoming = []
+        for predecessor in self.graph.predecessors(node_name):
+            edge_data = self.graph.get_edge_data(predecessor, node_name, {})
+            incoming.append({
+                "node": predecessor,
+                "relation": edge_data.get("relation", "CONNECTED"),
+                "email_id": edge_data.get("email_id")
+            })
+        
+        return {"outgoing": outgoing, "incoming": incoming}
+    
     def expand_graph_hits(self, graph_hits: List[Dict[str, Any]]) -> Dict[str, List[str]]:
         """
         Expand graph hits by retrieving neighbors for context enrichment.
@@ -121,22 +155,25 @@ class GraphService:
     
     def get_node_info(self, node_name: str) -> Dict[str, Any]:
         """
-        Get information about a specific node.
+        Get information about a specific node, including relationships.
         
         Args:
             node_name: Name of the node
             
         Returns:
-            Dictionary with node information
+            Dictionary with node information including relationships
         """
         if node_name not in self.graph:
             return {}
         
         node_data = self.graph.nodes[node_name]
+        relationships = self.get_relationships(node_name)
+        
         return {
             "name": node_name,
             "type": node_data.get("type", "unknown"),
             "neighbors": self.get_neighbors(node_name),
+            "relationships": relationships,  # NEW: Include relationship information
             "in_degree": self.graph.in_degree(node_name),
             "out_degree": self.graph.out_degree(node_name)
         }

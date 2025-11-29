@@ -44,6 +44,6 @@ KNOWN_INTENTS = [
 ]
 
 # User configuration (can be made dynamic per-user in future)
-DEFAULT_USER_NAME = "Assistant"
-DEFAULT_USER_TONE = "polite, proactive, and professional"
+DEFAULT_USER_NAME = "Zubair"
+DEFAULT_USER_TONE = "polite, proactive, and clear in communication"
 

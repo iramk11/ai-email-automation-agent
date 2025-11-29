@@ -1,141 +1,361 @@
-# AI Automation Agent
+# Graph RAG Email Assistant
 
-An intelligent email automation system that uses Retrieval-Augmented Generation (RAG) and GraphRAG to provide personalized email responses based on historical email patterns and replies.
+AI-powered email reply generator for Gmail using Graph RAG (Retrieval-Augmented Generation) with local LLM. Generates personalized email replies based on your historical email patterns and writing style.
 
-## Features
+##  Features
 
-- **Personalized Email Responses**: Uses your historical email replies to generate contextually appropriate responses
-- **Intent Classification**: Automatically categorizes incoming emails (follow-ups, interview schedules, acceptances, rejections, etc.)
-- **Vector Search**: Employs semantic search to find the most relevant historical responses
-- **Graph-based Relationships**: Uses Neo4j to model and query relationships between entities in emails
-- **Hybrid Retrieval**: Combines vector similarity search with graph-based relationship queries
-- **Local LLM Integration**: Uses Ollama for local language model inference
-- **Qdrant Vector Database**: Efficient storage and retrieval of email embeddings
-- **Neo4j Graph Database**: Persistent storage of knowledge graphs and entity relationships
+- **Smart Email Understanding**: Extracts context using hybrid retrieval (vector + graph)
+- **AI-Powered Replies**: Generates contextual drafts using local Llama 3 model via Ollama
+- **Writing Style Matching**: Gmail-style semantic search to match your writing tone
+- **Privacy First**: All processing happens locally - no data sent to third parties
+- **One-Click Generation**: Simple button in Gmail to generate replies
+- **Confidence Scoring**: Shows how confident the AI is about the reply
 
-## How It Works
+##  Prerequisites
 
-### Basic RAG (rag.py)
-1. **Data Ingestion**: Historical email-reply pairs are embedded using SentenceTransformers
-2. **Vector Storage**: Embeddings are stored in Qdrant for fast similarity search
-3. **Query Processing**: Incoming emails are embedded and matched against historical data
-4. **Response Generation**: The system retrieves relevant examples and generates personalized replies using a local LLM
+1. **Python 3.10+**
+2. **Ollama** with Llama 3 model
+   ```bash
+   # Install Ollama from https://ollama.ai
+   ollama pull llama3
+   ```
+3. **Conda** (recommended) or Python venv
+4. **Chrome Browser**
 
-### Advanced GraphRAG (graphrag.py)
-1. **Data Ingestion**: Historical email-reply pairs are processed and embedded
-2. **Graph Construction**: Entities and relationships are extracted and stored in Neo4j
-3. **Vector Storage**: Embeddings are stored in Qdrant for semantic similarity
-4. **Hybrid Retrieval**: Combines vector search with graph-based relationship queries
-5. **Enhanced Context**: Uses both semantic similarity and entity relationships for richer context
-6. **Response Generation**: Generates more contextually aware responses using the hybrid approach
+##  Installation & Setup
 
-## Dataset
+### Step 1: Prepare Knowledge Base (graph_rag_updated2.ipynb)
 
-The system includes a dataset of 31 email-reply pairs covering various scenarios:
-- Job application follow-ups
-- Interview scheduling
-- Acceptance and rejection notifications
-- Application status updates
+The system uses a Jupyter notebook to build the knowledge base from your email data:
 
-## Prerequisites
+1. **Open the notebook**: `graphrag/graph_rag_updated2.ipynb`
 
-- Python 3.8+ (recommended: Python 3.9 or 3.10)
-- Docker (for Qdrant and Neo4j)
-- Qdrant vector database (running on localhost:6333)
-- Neo4j graph database (running on localhost:7687) - for GraphRAG
-- Ollama with a language model (e.g., llama3)
+2. **Run all cells** to:
+   - Load FAQ data from `data/faq_updated.csv`
+   - Load labeled email pairs from `data/generated_email_pairs.json`
+   - Build NetworkX graph with topics, intents, and artifacts
+   - Create Qdrant collections:
+     - `knowledge_space`: FAQs and graph node embeddings
+     - `writing_style`: Reply chunks for style matching (Gmail-style approach)
+   - Index all data in Qdrant
 
-## Installation
+3. **Key Features of the Notebook**:
+   - **Multi-intent Classification**: Detects multiple intents per email
+   - **Intent-based Graph Retrieval**: Direct NetworkX lookup (no vector search for graph)
+   - **Separate FAQ Search**: Always retrieves FAQs using filtered search
+   - **Style-based Retrieval**: Semantic search for writing style examples
+   - **Graph Expansion**: Retrieves related nodes for richer context
 
-1. Clone the repository:
+4. **Important**: Close the notebook before starting the backend (Qdrant database lock)
+
+### Step 2: Set Up Backend
+
+1. **Navigate to project directory**:
+   ```bash
+   cd /Users/iramkamdar/RAG
+   ```
+
+2. **Create and activate conda environment**:
+   ```bash
+   conda create -n graph_rag python=3.10 -y
+   conda activate graph_rag
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r backend/requirements.txt
+   ```
+
+4. **Start the backend server**:
+   ```bash
+   # From project root (not inside backend/)
+   python -m uvicorn backend.main:app --reload
+   ```
+   
+   You should see:
+   ```
+   INFO: Starting Graph RAG Email Assistant API...
+   INFO: All services initialized successfully!
+   INFO: Uvicorn running on http://0.0.0.0:8000
+   ```
+
+5. **Test the backend** (in a new terminal):
+   ```bash
+   curl http://localhost:8000/api/health
+   ```
+
+### Step 3: Install Chrome Extension
+
+1. **Open Chrome** and navigate to `chrome://extensions/`
+
+2. **Enable "Developer mode"** (toggle in top-right corner)
+
+3. **Click "Load unpacked"**
+
+4. **Navigate to and select** the `chrome-extension` folder:
+   ```
+   /Users/iramkamdar/RAG/chrome-extension
+   ```
+
+5. **The extension should now appear** in your extensions list
+
+6. **Pin the extension** to your toolbar for easy access
+
+### Step 4: Configure Extension
+
+1. **Click the extension icon** in Chrome toolbar
+
+2. **Verify settings**:
+   - API URL: `http://localhost:8000/api` (default)
+   - Confidence Threshold: `0.85` (adjust as needed)
+   - Auto-insert drafts: ✓ (checked)
+
+3. **Click "Test Connection"** to verify backend is running
+
+4. **You should see** "Backend online and healthy" 
+
+##  Usage
+
+### Generating Email Replies
+
+1. **Open Gmail** (https://mail.google.com)
+
+2. **Open an email** you want to reply to
+
+3. **Click the Reply button** in Gmail
+
+4. **Look for the " Generate Reply" button** near the reply box
+
+5. **Click " Generate Reply"**
+   - The extension will extract the email content
+   - Send it to your local backend
+   - Generate a contextual reply using:
+     - FAQ matches for content
+     - Graph nodes for relationships
+     - Style examples for tone matching
+   - Insert it into the reply box
+
+6. **Review and edit** the generated draft as needed
+
+7. **Send** when satisfied!
+
+##  Configuration
+
+### Backend Configuration
+
+Edit `backend/config.py` to customize:
+
+```python
+# RAG settings
+TOP_K_RESULTS = 6  # Number of context items to retrieve
+AUTO_SEND_THRESHOLD = 0.85  # Confidence for auto-send suggestion
+MAX_REPLY_LENGTH = 120  # Max words in reply
+
+# User personalization
+DEFAULT_USER_NAME = "Zubair"  # Your name
+DEFAULT_USER_TONE = "polite, proactive, and clear in communication"
+```
+
+### Extension Settings
+
+In the extension popup:
+- **API URL**: Change if backend runs on different port
+- **Confidence Threshold**: Higher = more conservative (only high-confidence replies)
+- **Auto-insert**: Enable/disable automatic draft insertion
+
+##  Troubleshooting
+
+### Backend Issues
+
+**Issue**: `ModuleNotFoundError: No module named 'backend'`
+- **Solution**: Run from project root, not inside `backend/`:
+  ```bash
+  cd /Users/iramkamdar/RAG
+  python -m uvicorn backend.main:app --reload
+  ```
+
+**Issue**: `Storage folder is already accessed by another instance`
+- **Solution**: Close the Jupyter notebook first (it locks the Qdrant database)
+- **Or**: Remove lock file: `rm -f graphrag/qdrant_data/.lock`
+
+**Issue**: Qdrant data not found
+- **Solution**: Run `graphrag/graph_rag_updated2.ipynb` to generate the knowledge base
+
+**Issue**: Ollama not running
+- **Solution**: 
+  ```bash
+  ollama serve
+  # In another terminal
+  ollama pull llama3
+  ```
+
+**Issue**: Import errors or missing dependencies
+- **Solution**: 
+  ```bash
+  conda activate graph_rag
+  pip install -r backend/requirements.txt --force-reinstall
+  ```
+
+### Extension Issues
+
+**Issue**: "Generate Reply" button doesn't appear
+- Refresh Gmail page (F5 or Cmd+R)
+- Check browser console (F12) for errors
+- Ensure extension is enabled in `chrome://extensions/`
+- Make sure you clicked "Reply" first (reply box must be open)
+- Wait 2-3 seconds (button appears periodically)
+
+**Issue**: "Backend offline" in popup
+- Verify backend is running: `curl http://localhost:8000/api/health`
+- Check API URL in extension settings
+- Check browser console for CORS errors
+
+**Issue**: Button appears but nothing happens
+- Open browser console (F12)
+- Check for error messages
+- Verify reply box is open
+
+**Issue**: Content script not loading
+1. Go to `chrome://extensions/`
+2. Find "Graph RAG Email Assistant"
+3. Click "Reload" (🔄) icon
+4. Refresh Gmail page
+
+### Generation Issues
+
+**Issue**: Low confidence scores
+- Your query might not match FAQ/graph well
+- Add more relevant FAQ entries in `data/faq_updated.csv`
+- Build richer graph from more labeled emails
+
+**Issue**: Generated replies are generic
+- Improve prompt in `backend/services/ollama_service.py`
+- Add more contextual FAQ entries
+- Increase `TOP_K_RESULTS` in config
+
+**Issue**: Slow generation
+- Try smaller model: `ollama pull llama3.2:1b`
+- Update config to use smaller model
+- Check CPU/GPU usage
+
+## 📊 How It Works
+
+### Retrieval Flow
+
+1. **Intent Classification**: LLM classifies multiple intents from email (JSON array format)
+2. **FAQ Search**: Separate filtered search in `knowledge_space` collection (always retrieves FAQs)
+3. **Graph Retrieval**: Intent-based lookup in NetworkX graph (direct node matching)
+4. **Style Retrieval**: Semantic search in `writing_style` collection for tone matching
+5. **Reply Generation**: LLM generates reply using all context + style examples
+
+### Key Improvements
+
+-  **Better FAQ Retrieval**: Separate search ensures FAQs are always retrieved
+-  **Intent-based Graph**: Direct graph lookup is more reliable than vector search
+-  **Style Matching**: Gmail-style approach matches writing tone from historical replies
+-  **Multi-intent Support**: Can handle emails with multiple intents
+
+##  Architecture
+
+```
+┌─────────────────────────────────────┐
+│   Gmail (Chrome Browser)            │
+│   ├─ content.js (extract email)     │
+│   ├─ background.js (communication)  │
+│   └─ popup.html/js (settings)       │
+└─────────────────────────────────────┘
+                 ↕ HTTP
+┌─────────────────────────────────────┐
+│   FastAPI Backend                   │
+│   ├─ Intent Classification (Ollama) │
+│   ├─ Qdrant (Vector Search)         │
+│   │   ├─ knowledge_space (FAQs)     │
+│   │   └─ writing_style (Style)      │
+│   ├─ NetworkX (Graph Retrieval)     │
+│   └─ Ollama (Draft Generation)      │
+└─────────────────────────────────────┘
+```
+
+##  Project Structure
+
+```
+RAG/
+├── backend/                    # FastAPI backend
+│   ├── api/
+│   │   └── routes.py          # API endpoints
+│   ├── services/
+│   │   ├── embedding_service.py
+│   │   ├── qdrant_service.py
+│   │   ├── graph_service.py
+│   │   ├── ollama_service.py
+│   │   └── rag_service.py     # Main orchestration
+│   ├── models/
+│   │   └── schemas.py         # Pydantic models
+│   ├── config.py              # Configuration
+│   ├── main.py                # FastAPI app
+│   └── requirements.txt
+├── chrome-extension/          # Chrome extension
+│   ├── manifest.json
+│   ├── content.js            # Gmail integration
+│   ├── background.js         # Service worker
+│   ├── popup.html/js         # Settings UI
+│   └── styles/
+├── graphrag/
+│   ├── graph_rag_updated2.ipynb  # Main notebook
+│   └── qdrant_data/          # Qdrant database
+├── data/
+│   ├── faq_updated.csv       # FAQ data
+│   └── generated_email_pairs.json  # Labeled emails
+└── README.md                 # This file
+```
+
+##  Privacy & Security
+
+-  All data processing happens **locally**
+-  No third-party API calls (except your own backend)
+-  No email content is stored permanently
+-  Ollama runs locally (no data sent to cloud)
+-  Backend runs on localhost (not accessible from internet)
+
+##  Development
+
+### Backend Development
+
 ```bash
-git clone https://github.com/iramk11/ai-automation-agent.git
-cd ai-automation-agent
+# Run with auto-reload
+cd /Users/iramkamdar/RAG
+python -m uvicorn backend.main:app --reload
 ```
 
-2. Install dependencies:
+### Extension Development
+
+After making changes:
+1. Go to `chrome://extensions/`
+2. Click the refresh icon on your extension
+3. Reload Gmail page
+
+### API Testing
+
 ```bash
-pip install -r requirements.txt
+# Test health endpoint
+curl http://localhost:8000/api/health
+
+# Test reply generation
+curl -X POST http://localhost:8000/api/generate-reply \
+  -H "Content-Type: application/json" \
+  -d '{
+    "subject": "Test Subject",
+    "sender": "test@example.com",
+    "body": "Can we schedule a meeting?"
+  }'
 ```
 
-3. Start Qdrant:
-```bash
-docker run -p 6333:6333 qdrant/qdrant
-```
+##  Next Steps
 
-4. Pull an Ollama model:
-```bash
-ollama pull llama3
-```
+1. **Test with Real Emails**: Try generating replies for various email types
+2. **Customize Prompts**: Edit `backend/services/ollama_service.py` to match your style
+3. **Expand Knowledge Base**: Add more FAQs and labeled emails
+4. **Update Notebook**: Run `graphrag/graph_rag_updated2.ipynb` when you have new data
 
-## Usage
+---
 
-### Quick Setup
-See [SETUP.md](SETUP.md) for detailed installation instructions.
-
-### Basic RAG
-1. Load and ingest the dataset:
-```bash
-python rag.py
-```
-
-This will:
-- Create a Qdrant collection
-- Embed and store all email-reply pairs
-- Demonstrate the system with a sample query
-
-### Advanced GraphRAG
-1. Ensure Neo4j is running (see SETUP.md)
-2. Run the GraphRAG implementation:
-```bash
-python graphrag.py
-```
-
-This will:
-- Create a knowledge graph in Neo4j
-- Build vector embeddings in Qdrant
-- Demonstrate hybrid retrieval with both vector and graph search
-- Generate contextually enhanced responses
-
-Both systems will automatically:
-- Retrieve similar historical emails
-- Generate a personalized response
-- Display the results
-
-## Example Output
-
-```
---- Retrieved Context ---
-- follow_up: Follow Up - TechSphere (0.823)
-- follow_up: Follow Up - DataSense (0.789)
-- interview_schedule: Interview Schedule - TechSphere (0.745)
-
---- Generated Personalized Reply ---
-Hi there,
-
-Yes, absolutely! I remain very interested in the opportunity and am happy to provide any additional information if needed.
-
-Thanks,
-Ali
-```
-
-## Architecture
-
-```
-Incoming Email → Embedding → Vector Search → Retrieved Examples → LLM Generation → Personalized Reply
-```
-
-## Dependencies
-
-- `qdrant-client`: Vector database client
-- `sentence-transformers`: Text embeddings
-- `tqdm`: Progress bars
-- `ollama`: Local LLM integration (via subprocess)
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).

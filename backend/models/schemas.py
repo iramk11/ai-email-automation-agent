@@ -38,11 +38,21 @@ class GraphNodeHit(BaseModel):
     neighbors: List[str]
 
 
+class StyleExample(BaseModel):
+    """Writing style example from semantic search."""
+    score: float
+    reply_chunk: str
+    subject: str
+    intent: str = ""
+    email_id: str = ""
+
+
 class ContextUsed(BaseModel):
     """Context information used for generation."""
     faq_hits: List[FAQHit]
     graph_nodes: List[GraphNodeHit]
     expanded_graph: Dict[str, List[str]]
+    style_examples: List[StyleExample] = []  # ✅ NEW: Style examples for tone matching
 
 
 class EmailResponse(BaseModel):

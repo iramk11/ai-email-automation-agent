@@ -46,8 +46,16 @@ async def lifespan(app: FastAPI):
         embedding_service = EmbeddingService(model_name=EMBEDDING_MODEL)
         services['embedding'] = embedding_service
         
+        # Try graphrag_local/qdrant_data first (where notebook stores data), then fallback to root
+        # Note: If notebook is running, you'll need to close it first or use a separate data path
+        qdrant_path = BASE_DIR / "graphrag_local" / "qdrant_data"
+        if not qdrant_path.exists():
+            qdrant_path = QDRANT_DATA_PATH
+        
+        logger.info(f"Using Qdrant data path: {qdrant_path}")
+        logger.info("⚠️  Note: Make sure the Jupyter notebook is closed, or Qdrant will be locked")
         qdrant_service = QdrantService(
-            data_path=str(QDRANT_DATA_PATH),
+            data_path=str(qdrant_path),
             collection_name=QDRANT_COLLECTION_NAME
         )
         services['qdrant'] = qdrant_service
@@ -57,14 +65,33 @@ async def lifespan(app: FastAPI):
         # If graph wasn't loaded from file, build it from labels
         if not graph_service.health_check():
             logger.info("Graph not found, building from labels file...")
-            labels_file = BASE_DIR / "student_email_pairs.labels.jsonl"
-            if labels_file.exists():
+            # Try multiple possible label file locations
+            label_files = [
+                BASE_DIR / "data" / "generated_email_pairs.json",  # New format from notebook
+                BASE_DIR / "student_email_pairs.labels.jsonl",  # Old format
+            ]
+            
+            labels = []
+            labels_file = None
+            for label_file in label_files:
+                if label_file.exists():
+                    labels_file = label_file
+                    break
+            
+            if labels_file:
                 import json
-                labels = []
-                with open(labels_file, 'r') as f:
-                    for line in f:
-                        if line.strip():
-                            labels.append(json.loads(line))
+                logger.info(f"Loading labels from {labels_file}")
+                
+                if labels_file.suffix == '.json':
+                    # JSON format (generated_email_pairs.json)
+                    with open(labels_file, 'r', encoding='utf-8') as f:
+                        labels = json.load(f)
+                else:
+                    # JSONL format
+                    with open(labels_file, 'r', encoding='utf-8') as f:
+                        for line in f:
+                            if line.strip():
+                                labels.append(json.loads(line))
                 
                 graph_service.build_from_labels(labels)
                 logger.info(f"Built graph with {len(graph_service.graph.nodes())} nodes, {len(graph_service.graph.edges())} edges")
@@ -72,7 +99,7 @@ async def lifespan(app: FastAPI):
                 # Optionally save for next time
                 graph_service.save_graph(str(GRAPH_DATA_PATH))
             else:
-                logger.warning(f"Labels file not found at {labels_file}")
+                logger.warning(f"Labels file not found. Tried: {[str(f) for f in label_files]}")
         
         services['graph'] = graph_service
         

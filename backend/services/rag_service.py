@@ -8,7 +8,7 @@ from backend.services.embedding_service import EmbeddingService
 from backend.services.qdrant_service import QdrantService
 from backend.services.graph_service import GraphService
 from backend.services.ollama_service import OllamaService
-from backend.models.schemas import EmailRequest, EmailResponse, ContextUsed, FAQHit, GraphNodeHit
+from backend.models.schemas import EmailRequest, EmailResponse, ContextUsed, FAQHit, GraphNodeHit, StyleExample
 
 logger = logging.getLogger(__name__)
 
@@ -75,38 +75,39 @@ class RAGService:
             primary_intent = intents[0] if intents else "general_inquiry"
             logger.info(f"Detected intents: {intents} (primary: {primary_intent})")
             
-            # Step 2: Embed query
+            # Step 2: Embed query for vector search
             query_vector = self.embedding_service.encode(email_text)
             logger.info("Generated query embedding")
             
-            # Step 3: Vector search in Qdrant
-            hits = self.qdrant_service.search(query_vector, limit=self.top_k)
-            logger.info(f"Retrieved {len(hits)} results from Qdrant")
+            # Step 3: Search Qdrant for FAQs ONLY (separate search to ensure FAQs are always retrieved)
+            faq_hits_raw = self.qdrant_service.search_faqs_only(query_vector, limit=self.top_k)
+            logger.info(f"Retrieved {len(faq_hits_raw)} FAQ hits from Qdrant")
             
-            # Step 4: Separate FAQ and graph hits from vector search
-            faq_hits_raw, graph_hits_raw = self.qdrant_service.separate_hits(hits)
-            
-            logger.info(f"Vector search: {len(faq_hits_raw)} FAQ hits, {len(graph_hits_raw)} graph hits")
-            
-            # Step 4b: Supplement with intent-based graph retrieval
-            # This ensures we get relevant graph nodes even if vector search doesn't find them
+            # Step 4: Intent-based graph retrieval (using NetworkX, NO Qdrant for graph nodes)
             intent_graph_nodes = self.graph_service.get_nodes_by_intents(intents, limit=5)
             
-            # Convert intent-based nodes to graph hit format
+            # Convert to graph hit format
+            graph_hits_raw = []
             for node in intent_graph_nodes:
-                if not any(g.get("node_name") == node["name"] for g in graph_hits_raw):
-                    graph_hits_raw.append({
-                        "score": 0.75,  # Assign a reasonable default score for intent-based matches
-                        "node_name": node["name"],
-                        "node_type": node["type"],
-                        "neighbors": node["neighbors"]
-                    })
+                graph_hits_raw.append({
+                    "score": 0.75,  # Intent-based matches get fixed score
+                    "node_name": node["name"],
+                    "node_type": node["type"],
+                    "neighbors": node["neighbors"],
+                    "relationships": node.get("relationships", {"outgoing": [], "incoming": []})
+                })
+            
+            logger.info(f"Intent-based graph retrieval: {len(graph_hits_raw)} graph nodes")
+            
+            # Step 5: Style-based retrieval (Gmail-style approach)
+            style_examples = self.qdrant_service.search_style(query_vector, limit=3)
+            logger.info(f"Retrieved {len(style_examples)} style examples")
             
             # Convert to proper models
             faq_hits = [FAQHit(**faq) for faq in faq_hits_raw]
             graph_hits = [GraphNodeHit(**node) for node in graph_hits_raw]
             
-            logger.info(f"Total after intent-based retrieval: {len(faq_hits)} FAQ hits, {len(graph_hits)} graph hits")
+            logger.info(f"Total retrieval: {len(faq_hits)} FAQ hits, {len(graph_hits)} graph hits, {len(style_examples)} style examples")
             
             # Log detailed FAQ context
             logger.info("="*70)
@@ -135,13 +136,14 @@ class RAGService:
             
             logger.info("="*70)
             
-            # Step 6: Generate draft reply (use all intents for context)
+            # Step 6: Generate draft reply (use all intents for context + style examples)
             draft_reply = self.ollama_service.generate_reply(
                 email_text=email_text,
                 intent=", ".join(intents),  # Pass all intents as comma-separated string
                 faq_hits=faq_hits_raw,
                 graph_hits=graph_hits_raw,
                 expanded_graph=expanded_graph,
+                style_examples=style_examples,  # ✅ NEW: Pass style examples
                 user_name=user_name,
                 user_tone=self.default_user_tone
             )
@@ -159,6 +161,9 @@ class RAGService:
             logger.info(draft_reply)
             logger.info("="*70)
             
+            # Convert style examples to proper models
+            style_examples_models = [StyleExample(**s) for s in style_examples]
+            
             # Build response
             response = EmailResponse(
                 draft_reply=draft_reply,
@@ -168,7 +173,8 @@ class RAGService:
                 context_used=ContextUsed(
                     faq_hits=faq_hits,
                     graph_nodes=graph_hits,
-                    expanded_graph=expanded_graph
+                    expanded_graph=expanded_graph,
+                    style_examples=style_examples_models  # ✅ NEW: Include style examples
                 )
             )
             

@@ -50,5 +50,6 @@ echo ""
 echo "Press Ctrl+C to stop the server"
 echo "─────────────────────────────────────────────────"
 
-python -m backend.main
+# Run from project root using uvicorn
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 
