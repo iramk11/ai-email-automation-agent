@@ -1,0 +1,40 @@
+RULES:
+1. an email can have one topic but multiple intents and artifacts (usually just 1 rarely 2/3)
+2. Zubair always ends the mail with:
+Best Regards,
+Zubair
+3. Need to have 20 different combinations for 5 emails each from them.
+
+- topics
+- intent
+- artifacts
+4. email and reply need to be no more than 400-500 characters each.
+
+something like
+email:
+"""
+Dear Zubair,
+
+I'm Daniel Smith, reaching out on behalf of DataMinds Solutions. Your background in data science is impressive, and we're interested in learning more about your experiences. Could you share your resume with us? We look forward to the possibility of having you on our team.
+
+Best regards,
+Daniel Smith
+DataMinds Solutions
+"""
+
+reply:
+"""
+Hi Daniel,
+
+I'm grateful for the opportunity at DataMinds Solutions.
+
+Here is the link to my updated ML/ Data Science Resume: https://drive.google.com/file/d/1vdCmzkVhLcFU8lgX4wuVFx82KNuE02TM/view?usp=sharing.
+
+Looking forward to potential collaborations.
+
+Regards,
+Zubair
+"""
+
+list relevant combinations before that.
+but the idea is to have 2 different prompts to generate 5 emails. each.
