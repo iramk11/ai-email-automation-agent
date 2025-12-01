@@ -6,8 +6,19 @@
 console.log('Graph RAG Email Assistant: Content script loaded');
 
 // Configuration
-const API_BASE_URL = 'http://localhost:8000/api';
+const DEFAULT_API_URL = 'http://localhost:8001/api';
 const BUTTON_CHECK_INTERVAL = 2000; // Check for reply buttons every 2 seconds
+
+/**
+ * Get API URL from storage
+ */
+async function getApiUrl() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get(['apiUrl'], (items) => {
+            resolve(items.apiUrl || DEFAULT_API_URL);
+        });
+    });
+}
 
 /**
  * Extract email content from the current Gmail view
@@ -83,17 +94,44 @@ function insertDraft(draftText, replyBox) {
     console.log('Inserting draft into reply box...');
     
     try {
-        // Set the text content
-        replyBox.innerText = draftText;
+        // Gmail's contenteditable divs need proper HTML formatting
+        // Convert newlines to <br> tags and handle paragraphs
+        const paragraphs = draftText.split(/\n\n+/).filter(p => p.trim().length > 0);
+        
+        let htmlContent;
+        if (paragraphs.length > 1) {
+            // Multiple paragraphs: wrap each in <p> tags
+            htmlContent = paragraphs
+                .map(paragraph => {
+                    // Convert single newlines within paragraphs to <br>
+                    return `<p>${paragraph.trim().replace(/\n/g, '<br>')}</p>`;
+                })
+                .join('');
+        } else {
+            // Single paragraph: just convert newlines to <br>
+            htmlContent = draftText.replace(/\n/g, '<br>');
+        }
+        
+        // Set the HTML content to preserve formatting
+        replyBox.innerHTML = htmlContent;
+        
+        // Move cursor to end of content
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(replyBox);
+        range.collapse(false); // Collapse to end
+        selection.removeAllRanges();
+        selection.addRange(range);
         
         // Trigger input events to ensure Gmail recognizes the change
         replyBox.dispatchEvent(new Event('input', { bubbles: true }));
         replyBox.dispatchEvent(new Event('change', { bubbles: true }));
+        replyBox.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
         
         // Focus the reply box
         replyBox.focus();
         
-        console.log('Draft inserted successfully');
+        console.log('Draft inserted successfully with formatting');
         return true;
     } catch (error) {
         console.error('Failed to insert draft:', error);
@@ -107,8 +145,11 @@ function insertDraft(draftText, replyBox) {
 async function generateReply(emailData) {
     console.log('Calling API to generate reply...');
     
+    // Get API URL from storage
+    const apiUrl = await getApiUrl();
+    
     try {
-        const response = await fetch(`${API_BASE_URL}/generate-reply`, {
+        const response = await fetch(`${apiUrl}/generate-reply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,6 +167,7 @@ async function generateReply(emailData) {
         // Log detailed context for debugging
         console.log('🎯 RETRIEVAL DETAILS:');
         console.log('  Intent:', result.intent);
+        console.log('  Artifacts:', result.artifacts || []);
         console.log('  Confidence:', result.confidence_score);
         console.log('  Auto-send:', result.auto_send);
         
@@ -135,14 +177,10 @@ async function generateReply(emailData) {
                 console.log(`    [${i+1}] Score: ${faq.score.toFixed(3)} - ${faq.question}`);
             });
             
-            console.log('\n🕸️  Graph Nodes:', result.context_used.graph_nodes?.length || 0);
-            result.context_used.graph_nodes?.forEach((node, i) => {
-                console.log(`    [${i+1}] Score: ${node.score.toFixed(3)} - ${node.node_name} (${node.node_type})`);
-            });
-            
-            console.log('\n🔗 Expanded Graph:');
-            Object.entries(result.context_used.expanded_graph || {}).forEach(([node, neighbors]) => {
-                console.log(`    ${node} → [${neighbors.join(', ')}]`);
+            console.log('\n📧 Graph Replies:', result.context_used.graph_replies?.length || 0);
+            console.log('  Matching emails found:', result.context_used.graph_emails_found || 0);
+            result.context_used.graph_replies?.forEach((reply, i) => {
+                console.log(`    [${i+1}] ${reply.substring(0, 100)}...`);
             });
         }
         
@@ -229,21 +267,37 @@ function showContextPanel(response) {
     
     const contextInfo = response.context_used;
     
+    // Create header with close button
+    const headerDiv = document.createElement('div');
+    headerDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;';
+    
+    const title = document.createElement('h3');
+    title.style.cssText = 'margin: 0; color: #667eea;';
+    title.textContent = '🔍 Retrieval Context';
+    
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '✕';
+    closeButton.style.cssText = `
+        border: none;
+        background: #f5f5f5;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    `;
+    closeButton.addEventListener('click', () => {
+        panel.remove();
+    });
+    
+    headerDiv.appendChild(title);
+    headerDiv.appendChild(closeButton);
+    
+    const artifacts = response.artifacts || [];
+    
     let html = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; color: #667eea;">🔍 Retrieval Context</h3>
-            <button onclick="this.parentElement.parentElement.remove()" style="
-                border: none;
-                background: #f5f5f5;
-                padding: 5px 10px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-            ">✕</button>
-        </div>
-        
         <div style="background: #f0f0f0; padding: 8px; border-radius: 4px; margin-bottom: 10px;">
             <strong>Intent:</strong> ${response.intent}<br>
+            <strong>Artifacts:</strong> ${artifacts.join(', ') || 'None'}<br>
             <strong>Confidence:</strong> ${(response.confidence_score * 100).toFixed(1)}%<br>
             <strong>Auto-send:</strong> ${response.auto_send ? '✅ Yes' : '❌ No'}
         </div>
@@ -266,36 +320,26 @@ function showContextPanel(response) {
         });
     }
     
-    // Graph Nodes
-    if (contextInfo?.graph_nodes?.length > 0) {
-        html += '<div style="margin: 10px 0;"><strong>🕸️  Graph Nodes:</strong></div>';
-        contextInfo.graph_nodes.forEach((node, i) => {
+    // Graph Replies (NEW)
+    if (contextInfo?.graph_replies?.length > 0) {
+        html += '<div style="margin: 10px 0;"><strong>📧 Similar Email Replies:</strong></div>';
+        html += `<div style="font-size: 11px; color: #666; margin-bottom: 5px;">Found ${contextInfo.graph_emails_found || 0} matching emails</div>`;
+        contextInfo.graph_replies.forEach((reply, i) => {
             html += `
                 <div style="background: #e3f2fd; padding: 8px; border-radius: 4px; margin-bottom: 5px; font-size: 12px;">
                     <div style="color: #1565c0; font-weight: bold;">
-                        [${(node.score * 100).toFixed(1)}%] ${node.node_name} <span style="color: #666;">(${node.node_type})</span>
+                        Example Reply ${i + 1}:
                     </div>
                     <div style="color: #666; margin-top: 4px;">
-                        Connected: ${node.neighbors.slice(0, 3).join(', ')}${node.neighbors.length > 3 ? '...' : ''}
+                        ${reply.substring(0, 150)}${reply.length > 150 ? '...' : ''}
                     </div>
                 </div>
             `;
         });
     }
     
-    // Expanded Graph
-    if (contextInfo?.expanded_graph && Object.keys(contextInfo.expanded_graph).length > 0) {
-        html += '<div style="margin: 10px 0;"><strong>🔗 Related Concepts:</strong></div>';
-        Object.entries(contextInfo.expanded_graph).forEach(([node, neighbors]) => {
-            html += `
-                <div style="background: #fff3e0; padding: 6px; border-radius: 4px; margin-bottom: 3px; font-size: 11px; color: #666;">
-                    ${node} → ${neighbors.slice(0, 4).join(', ')}${neighbors.length > 4 ? '...' : ''}
-                </div>
-            `;
-        });
-    }
-    
-    panel.innerHTML = html;
+    panel.appendChild(headerDiv);
+    panel.insertAdjacentHTML('beforeend', html);
     document.body.appendChild(panel);
     
     // Auto-hide after 30 seconds
@@ -367,13 +411,15 @@ function createGenerateButton() {
                 // Show detailed notification with context
                 const contextInfo = response.context_used;
                 const faqCount = contextInfo?.faq_hits?.length || 0;
-                const graphCount = contextInfo?.graph_nodes?.length || 0;
+                const graphReplyCount = contextInfo?.graph_replies?.length || 0;
+                const artifacts = response.artifacts || [];
                 
                 showNotification(
                     `✅ Reply generated!\n` +
                     `Intent: ${response.intent}\n` +
+                    `Artifacts: ${artifacts.join(', ') || 'None'}\n` +
                     `Confidence: ${(response.confidence_score * 100).toFixed(0)}%\n` +
-                    `Context: ${faqCount} FAQs, ${graphCount} graph nodes`,
+                    `Context: ${faqCount} FAQs, ${graphReplyCount} graph replies`,
                     'success'
                 );
                 
@@ -383,9 +429,10 @@ function createGenerateButton() {
                 // Log detailed breakdown
                 console.log('📊 GENERATION SUMMARY:');
                 console.log(`  Intent detected: ${response.intent}`);
+                console.log(`  Artifacts detected: ${artifacts.join(', ') || 'None'}`);
                 console.log(`  Confidence score: ${response.confidence_score.toFixed(3)}`);
                 console.log(`  Used ${faqCount} FAQ entries`);
-                console.log(`  Used ${graphCount} graph nodes`);
+                console.log(`  Used ${graphReplyCount} graph replies`);
                 console.log(`  Draft length: ${response.draft_reply.length} chars`);
             } else {
                 showNotification('Failed to insert draft. Please try again.', 'error');

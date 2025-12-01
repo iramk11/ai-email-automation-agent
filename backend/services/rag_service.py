@@ -8,7 +8,7 @@ from backend.services.embedding_service import EmbeddingService
 from backend.services.qdrant_service import QdrantService
 from backend.services.graph_service import GraphService
 from backend.services.ollama_service import OllamaService
-from backend.models.schemas import EmailRequest, EmailResponse, ContextUsed, FAQHit, GraphNodeHit, StyleExample
+from backend.models.schemas import EmailRequest, EmailResponse, ContextUsed, FAQHit
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +23,8 @@ class RAGService:
         graph_service: GraphService,
         ollama_service: OllamaService,
         known_intents: list,
+        known_artifacts: list,
+        artifact_dict: dict,
         top_k: int = 6,
         auto_send_threshold: float = 0.85,
         default_user_name: str = "Assistant",
@@ -47,12 +49,14 @@ class RAGService:
         self.graph_service = graph_service
         self.ollama_service = ollama_service
         self.known_intents = known_intents
+        self.known_artifacts = known_artifacts
+        self.artifact_dict = artifact_dict
         self.top_k = top_k
         self.auto_send_threshold = auto_send_threshold
         self.default_user_name = default_user_name
         self.default_user_tone = default_user_tone
         
-        logger.info("RAG service initialized successfully")
+        logger.info("RAG service initialized successfully (enhanced methodology)")
     
     async def generate_reply(self, request: EmailRequest) -> EmailResponse:
         """
@@ -69,90 +73,98 @@ class RAGService:
             user_name = request.user_name or self.default_user_name
             
             logger.info(f"Processing email from {request.sender}")
+            logger.info("="*70)
+            logger.info("🚀 ENHANCED EMAIL ANSWERING PIPELINE")
+            logger.info("="*70)
             
-            # Step 1: Classify intents (can be multiple)
-            intents = self.ollama_service.classify_intent(email_text, self.known_intents)
+            # Step 1: Enhanced intent + artifact classification (NEW)
+            logger.info("📋 Step 1: Intent + Artifact Classification")
+            classification_result = self.ollama_service.classify_intent_and_artifacts(
+                email_text=email_text,
+                known_intents=self.known_intents,
+                known_artifacts=self.known_artifacts,
+                artifact_dict=self.artifact_dict
+            )
+            
+            intents = classification_result["intents"]
+            artifacts = classification_result["artifacts"]
             primary_intent = intents[0] if intents else "general_inquiry"
-            logger.info(f"Detected intents: {intents} (primary: {primary_intent})")
+            
+            logger.info(f"   ✅ Intents: {intents}")
+            logger.info(f"   ✅ Artifacts: {artifacts}")
+            logger.info(f"   ✅ Primary Intent: {primary_intent}")
             
             # Step 2: Embed query for vector search
             query_vector = self.embedding_service.encode(email_text)
-            logger.info("Generated query embedding")
+            logger.info("📋 Step 2: FAQ Search")
             
-            # Step 3: Search Qdrant for FAQs ONLY (separate search to ensure FAQs are always retrieved)
+            # Step 3: Search Qdrant for FAQs ONLY (keep as-is)
             faq_hits_raw = self.qdrant_service.search_faqs_only(query_vector, limit=self.top_k)
-            logger.info(f"Retrieved {len(faq_hits_raw)} FAQ hits from Qdrant")
+            logger.info(f"   ✅ FAQ hits: {len(faq_hits_raw)}")
             
-            # Step 4: Intent-based graph retrieval (using NetworkX, NO Qdrant for graph nodes)
-            intent_graph_nodes = self.graph_service.get_nodes_by_intents(intents, limit=5)
+            # Step 4: Graph RAG search (NEW: intersection of intents and artifacts)
+            logger.info("📋 Step 3: Graph RAG Search (Intent + Artifact Intersection)")
             
-            # Convert to graph hit format
-            graph_hits_raw = []
-            for node in intent_graph_nodes:
-                graph_hits_raw.append({
-                    "score": 0.75,  # Intent-based matches get fixed score
-                    "node_name": node["name"],
-                    "node_type": node["type"],
-                    "neighbors": node["neighbors"],
-                    "relationships": node.get("relationships", {"outgoing": [], "incoming": []})
-                })
+            matching_email_ids = []
+            graph_replies = []
             
-            logger.info(f"Intent-based graph retrieval: {len(graph_hits_raw)} graph nodes")
-            
-            # Step 5: Style-based retrieval (Gmail-style approach)
-            style_examples = self.qdrant_service.search_style(query_vector, limit=3)
-            logger.info(f"Retrieved {len(style_examples)} style examples")
+            if intents and artifacts:
+                matching_email_ids = self.graph_service.find_emails_by_intent_artifact_intersection(
+                    intents=intents,
+                    artifacts=artifacts
+                )
+                
+                # Extract replies from matching emails
+                graph_replies = self.graph_service.get_replies_by_email_ids(matching_email_ids)
+                
+                logger.info(f"   ✅ Matching emails: {len(matching_email_ids)}")
+                logger.info(f"   ✅ Replies extracted: {len(graph_replies)}")
+                if graph_replies:
+                    logger.info("   📧 Sample replies:")
+                    for i, reply in enumerate(graph_replies[:3], 1):
+                        logger.info(f"      {i}. {reply[:100]}...")
+            else:
+                logger.warning("   ⚠️ Need at least 1 intent AND 1 artifact for graph search")
             
             # Convert to proper models
             faq_hits = [FAQHit(**faq) for faq in faq_hits_raw]
-            graph_hits = [GraphNodeHit(**node) for node in graph_hits_raw]
             
-            logger.info(f"Total retrieval: {len(faq_hits)} FAQ hits, {len(graph_hits)} graph hits, {len(style_examples)} style examples")
+            logger.info("="*70)
+            logger.info("🔍 RETRIEVED CONTEXT")
+            logger.info("="*70)
             
             # Log detailed FAQ context
-            logger.info("="*70)
-            logger.info("📚 FAQ CONTEXT BEING USED:")
-            for i, faq in enumerate(faq_hits[:3], 1):  # Show top 3
-                logger.info(f"  {i}. [Score: {faq.score:.3f}]")
-                logger.info(f"     Q: {faq.question[:80]}...")
-                logger.info(f"     A: {faq.answer[:100]}...")
-            if len(faq_hits) > 3:
-                logger.info(f"  ... and {len(faq_hits) - 3} more FAQs")
+            logger.info("📚 FAQ Chunks:")
+            if faq_hits:
+                for i, faq in enumerate(faq_hits[:3], 1):
+                    logger.info(f"  {i}. [Score {faq.score:.3f}] Q: {faq.question}")
+                    logger.info(f"     A: {faq.answer[:80]}...")
+            else:
+                logger.info("  None")
             
-            # Log detailed graph context
-            logger.info("🕸️  GRAPH CONTEXT BEING USED:")
-            for i, node in enumerate(graph_hits, 1):
-                logger.info(f"  {i}. [Score: {node.score:.3f}] {node.node_name} (type: {node.node_type})")
-                logger.info(f"     Neighbors: {', '.join(node.neighbors[:5])}")
-            
-            # Step 5: Expand graph context
-            expanded_graph = self.graph_service.expand_graph_hits(graph_hits_raw)
-            logger.info(f"Expanded {len(expanded_graph)} graph nodes")
-            
-            if expanded_graph:
-                logger.info("🔗 EXPANDED GRAPH RELATIONSHIPS:")
-                for node, neighbors in list(expanded_graph.items())[:3]:
-                    logger.info(f"  {node} → {', '.join(neighbors[:5])}")
+            logger.info(f"\n📧 Graph Replies: {len(graph_replies)}")
+            if graph_replies:
+                for i, reply in enumerate(graph_replies[:3], 1):
+                    logger.info(f"  {i}. {reply[:100]}...")
+            else:
+                logger.info("  None")
             
             logger.info("="*70)
             
-            # Step 6: Generate draft reply (use all intents for context + style examples)
+            # Step 5: Generate draft reply (NEW: uses graph replies instead of style)
+            logger.info("📋 Step 4: Generating Reply")
             draft_reply = self.ollama_service.generate_reply(
                 email_text=email_text,
-                intent=", ".join(intents),  # Pass all intents as comma-separated string
+                intent=", ".join(intents),
+                artifacts=artifacts,
                 faq_hits=faq_hits_raw,
-                graph_hits=graph_hits_raw,
-                expanded_graph=expanded_graph,
-                style_examples=style_examples,  # ✅ NEW: Pass style examples
+                graph_replies=graph_replies,
                 user_name=user_name,
                 user_tone=self.default_user_tone
             )
             
-            # Step 7: Calculate confidence score (using top FAQ hit score)
+            # Step 6: Calculate confidence score (using top FAQ hit score)
             confidence_score = faq_hits[0].score if faq_hits else 0.0
-            if not faq_hits and graph_hits:
-                confidence_score = graph_hits[0].score
-            
             auto_send = confidence_score >= self.auto_send_threshold
             
             logger.info(f"Generated reply with confidence: {confidence_score:.3f}, auto_send: {auto_send}")
@@ -161,20 +173,17 @@ class RAGService:
             logger.info(draft_reply)
             logger.info("="*70)
             
-            # Convert style examples to proper models
-            style_examples_models = [StyleExample(**s) for s in style_examples]
-            
             # Build response
             response = EmailResponse(
                 draft_reply=draft_reply,
-                intent=primary_intent,  # Return primary intent
+                intent=primary_intent,
+                artifacts=artifacts,
                 confidence_score=confidence_score,
                 auto_send=auto_send,
                 context_used=ContextUsed(
                     faq_hits=faq_hits,
-                    graph_nodes=graph_hits,
-                    expanded_graph=expanded_graph,
-                    style_examples=style_examples_models  # ✅ NEW: Include style examples
+                    graph_replies=graph_replies,
+                    graph_emails_found=len(matching_email_ids)
                 )
             )
             

@@ -28,7 +28,7 @@ MAX_REPLY_LENGTH = 120  # words
 
 # API settings
 API_HOST = "0.0.0.0"
-API_PORT = 8000
+API_PORT = 8001
 CORS_ORIGINS = [
     "chrome-extension://*",
     "http://localhost:*",
@@ -42,6 +42,31 @@ KNOWN_INTENTS = [
     'schedule', 'request_info', 'share_feedback',
     'general_inquiry'
 ]
+
+# Artifact dictionary - explains what each artifact means
+ARTIFACT_DICTIONARY = {
+    "ds_resume": "Data Science resume - use when email mentions ML, data science, analytics, or data-related roles",
+    "swe_resume": "Software Engineering resume - use when email mentions software engineering, development, or SWE roles",
+    "linkedin_profile": "LinkedIn profile link - use when email asks for LinkedIn, professional profile, or networking",
+    "portfolio": "Portfolio website - use when email asks for work samples, projects, or portfolio",
+    "github": "GitHub profile - use when email asks for code samples, GitHub, or technical projects",
+    "calendly": "Calendly scheduling link - use when email asks to schedule, book, or arrange a meeting",
+    "zoom_link": "Zoom meeting link - use when email asks for video call, Zoom meeting, or virtual meeting",
+    "phone_number": "Phone number - use when email asks for phone contact or urgent communication",
+    "draft": "Draft document - use when email asks for draft, document review, or written materials",
+    "report": "Report document - use when email asks for report, progress update, or formal document",
+    "application_form": "Application form - use when email mentions application or form submission",
+    "calendar_invite": "Calendar invite - use when email asks for calendar event or meeting invite",
+    "evaluation_sheet": "Evaluation sheet - use when email asks for evaluation or assessment",
+    "feedback_form": "Feedback form - use when email asks for feedback collection or survey",
+    "job_description": "Job description - use when email mentions job posting or position details",
+    "meeting_link": "Meeting link - use when email asks for meeting URL or virtual meeting",
+    "offer_letter": "Offer letter - use when email mentions job offer or position offer",
+    "review_link": "Review link - use when email asks for review or evaluation link"
+}
+
+# Known artifacts (extracted from data)
+KNOWN_ARTIFACTS = list(ARTIFACT_DICTIONARY.keys())
 
 # User configuration (can be made dynamic per-user in future)
 DEFAULT_USER_NAME = "Zubair"

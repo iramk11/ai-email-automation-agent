@@ -50,15 +50,15 @@ class StyleExample(BaseModel):
 class ContextUsed(BaseModel):
     """Context information used for generation."""
     faq_hits: List[FAQHit]
-    graph_nodes: List[GraphNodeHit]
-    expanded_graph: Dict[str, List[str]]
-    style_examples: List[StyleExample] = []  # ✅ NEW: Style examples for tone matching
+    graph_replies: List[str] = []  # NEW: Replies from graph RAG intersection search
+    graph_emails_found: int = 0  # NEW: Number of matching emails found
 
 
 class EmailResponse(BaseModel):
     """Response model for generated email reply."""
     draft_reply: str = Field(..., description="Generated draft reply")
     intent: str = Field(..., description="Detected intent of the email")
+    artifacts: List[str] = Field(default=[], description="Detected artifacts (NEW)")
     confidence_score: float = Field(..., description="Confidence score (0-1) based on retrieval")
     auto_send: bool = Field(..., description="Whether the reply is confident enough for auto-send")
     context_used: ContextUsed = Field(..., description="Context information used")

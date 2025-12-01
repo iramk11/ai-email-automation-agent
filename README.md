@@ -52,10 +52,19 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
 
 1. **Navigate to project directory**:
    ```bash
-   cd /Users/iramkamdar/RAG
+   cd .
    ```
 
-2. **Create and activate conda environment**:
+2. **Create and activate virtual environment** (choose one):
+   
+   **Option A: Using Python venv** (recommended if conda is not available):
+   ```bash
+   python3 -m venv email-agent
+   source email-agent/bin/activate  # On macOS/Linux
+   # or: email-agent\Scripts\activate  # On Windows
+   ```
+   
+   **Option B: Using conda**:
    ```bash
    conda create -n graph_rag python=3.10 -y
    conda activate graph_rag
@@ -67,8 +76,16 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
    ```
 
 4. **Start the backend server**:
+   
+   **Option A: Using the start script** (recommended):
+   ```bash
+   ./start_backend.sh
+   ```
+   
+   **Option B: Manual start**:
    ```bash
    # From project root (not inside backend/)
+   source email-agent/bin/activate  # Activate venv first
    python -m uvicorn backend.main:app --reload
    ```
    
@@ -76,12 +93,14 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
    ```
    INFO: Starting Graph RAG Email Assistant API...
    INFO: All services initialized successfully!
-   INFO: Uvicorn running on http://0.0.0.0:8000
+   INFO: Uvicorn running on http://0.0.0.0:8001
    ```
+
+   **Note**: If port 8000 is available, the backend will use it. Otherwise, it defaults to 8001.
 
 5. **Test the backend** (in a new terminal):
    ```bash
-   curl http://localhost:8000/api/health
+   curl http://localhost:8001/api/health
    ```
 
 ### Step 3: Install Chrome Extension
@@ -92,10 +111,7 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
 
 3. **Click "Load unpacked"**
 
-4. **Navigate to and select** the `chrome-extension` folder:
-   ```
-   /Users/iramkamdar/RAG/chrome-extension
-   ```
+4. **Navigate to and select** the `chrome-extension` folder in your project directory
 
 5. **The extension should now appear** in your extensions list
 
@@ -106,7 +122,7 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
 1. **Click the extension icon** in Chrome toolbar
 
 2. **Verify settings**:
-   - API URL: `http://localhost:8000/api` (default)
+   - API URL: `http://localhost:8001/api` (default - update if backend uses different port)
    - Confidence Threshold: `0.85` (adjust as needed)
    - Auto-insert drafts: ✓ (checked)
 
@@ -170,7 +186,7 @@ In the extension popup:
 **Issue**: `ModuleNotFoundError: No module named 'backend'`
 - **Solution**: Run from project root, not inside `backend/`:
   ```bash
-  cd /Users/iramkamdar/RAG
+  cd .
   python -m uvicorn backend.main:app --reload
   ```
 
@@ -206,8 +222,8 @@ In the extension popup:
 - Wait 2-3 seconds (button appears periodically)
 
 **Issue**: "Backend offline" in popup
-- Verify backend is running: `curl http://localhost:8000/api/health`
-- Check API URL in extension settings
+- Verify backend is running: `curl http://localhost:8001/api/health` (or your backend port)
+- Check API URL in extension settings matches your backend port
 - Check browser console for CORS errors
 
 **Issue**: Button appears but nothing happens
@@ -323,7 +339,7 @@ RAG/
 
 ```bash
 # Run with auto-reload
-cd /Users/iramkamdar/RAG
+cd .
 python -m uvicorn backend.main:app --reload
 ```
 
@@ -338,10 +354,10 @@ After making changes:
 
 ```bash
 # Test health endpoint
-curl http://localhost:8000/api/health
+curl http://localhost:8001/api/health
 
 # Test reply generation
-curl -X POST http://localhost:8000/api/generate-reply \
+curl -X POST http://localhost:8001/api/generate-reply \
   -H "Content-Type: application/json" \
   -d '{
     "subject": "Test Subject",
