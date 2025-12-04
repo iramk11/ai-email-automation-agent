@@ -44,25 +44,18 @@ KNOWN_INTENTS = [
 ]
 
 # Artifact dictionary - explains what each artifact means
+# Only includes artifacts actually used in generated_email_pairs.json and golden_dataset_benchmark.json
 ARTIFACT_DICTIONARY = {
-    "ds_resume": "Data Science resume - use when email mentions ML, data science, analytics, or data-related roles",
-    "swe_resume": "Software Engineering resume - use when email mentions software engineering, development, or SWE roles",
-    "linkedin_profile": "LinkedIn profile link - use when email asks for LinkedIn, professional profile, or networking",
-    "portfolio": "Portfolio website - use when email asks for work samples, projects, or portfolio",
-    "github": "GitHub profile - use when email asks for code samples, GitHub, or technical projects",
     "calendly": "Calendly scheduling link - use when email asks to schedule, book, or arrange a meeting",
-    "zoom_link": "Zoom meeting link - use when email asks for video call, Zoom meeting, or virtual meeting",
-    "phone_number": "Phone number - use when email asks for phone contact or urgent communication",
     "draft": "Draft document - use when email asks for draft, document review, or written materials",
+    "ds_resume": "Data Science resume - use when email mentions ML, data science, analytics, or data-related roles",
+    "github": "GitHub profile - use when email asks for code samples, GitHub, or technical projects",
+    "linkedin_profile": "LinkedIn profile link - use when email asks for LinkedIn, professional profile, or networking",
+    "phone_number": "Phone number - use when email asks for phone contact or urgent communication",
+    "portfolio": "Portfolio website - use when email asks for work samples, projects, or portfolio",
     "report": "Report document - use when email asks for report, progress update, or formal document",
-    "application_form": "Application form - use when email mentions application or form submission",
-    "calendar_invite": "Calendar invite - use when email asks for calendar event or meeting invite",
-    "evaluation_sheet": "Evaluation sheet - use when email asks for evaluation or assessment",
-    "feedback_form": "Feedback form - use when email asks for feedback collection or survey",
-    "job_description": "Job description - use when email mentions job posting or position details",
-    "meeting_link": "Meeting link - use when email asks for meeting URL or virtual meeting",
-    "offer_letter": "Offer letter - use when email mentions job offer or position offer",
-    "review_link": "Review link - use when email asks for review or evaluation link"
+    "swe_resume": "Software Engineering resume - use when email mentions software engineering, development, or SWE roles",
+    "zoom_link": "Zoom meeting link - use when email asks for video call, Zoom meeting, or virtual meeting"
 }
 
 # Known artifacts (extracted from data)

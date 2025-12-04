@@ -1,0 +1,5 @@
+results/*.json
+evaluation.log
+*.pyc
+__pycache__/
+
