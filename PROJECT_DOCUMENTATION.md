@@ -116,9 +116,15 @@ The **AI Email Automation Agent** is an intelligent email reply generation syste
   - Recall: 0.925 (92.5%)
   - Exact Match: 0.850 (85%)
 
-- **ROUGE-L Score**: **0.414** (41.4%)
+- **ROUGE-L Score**: **0.414** (41.4%) ⚠️ *Moderate - see analysis below*
   - ROUGE-1: 0.517 (51.7%)
   - ROUGE-2: 0.303 (30.3%)
+  
+  **ROUGE Score Context**: 
+  - For **email generation** (not summarization), ROUGE scores are typically lower because there are many valid ways to phrase the same response
+  - ROUGE measures exact word/phrase overlap, but emails can be semantically equivalent with different wording
+  - **0.41 ROUGE-L is reasonable** for this task - the system generates paraphrased responses rather than copying reference text
+  - This is supported by **ExPerT Semantic: 0.71** (71%) showing good semantic similarity despite lower word overlap
 
 - **ExPerT Overall**: **0.562** (56.2%)
   - Semantic: 0.710 (71.0%)
@@ -185,10 +191,13 @@ The **AI Email Automation Agent** is an intelligent email reply generation syste
 
 2. **Exact Word Matching** (ROUGE-L: 0.414)
    - While semantic similarity is good, exact word overlap is moderate
-   - This is expected as the system generates paraphrased responses
+   - **This is expected and acceptable** for email generation tasks where multiple valid phrasings exist
+   - ROUGE scores are typically lower for generation tasks (0.3-0.5) compared to summarization (0.5-0.7)
+   - The system prioritizes semantic correctness over exact word matching, which is appropriate for personalized email generation
 
 3. **Content Appropriateness**
    - Some emails show lower ROUGE scores, suggesting the system could better match specific phrasing
+   - However, **LLM Judge (4.09/5)** and **ExPerT Semantic (0.71)** indicate good content quality
 
 ### Performance Breakdown by Category
 

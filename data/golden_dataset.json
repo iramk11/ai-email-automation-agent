@@ -1,0 +1,117 @@
+[
+  {
+    "id": "golden_001",
+    "prospect_email": "Hi Zubair, I need to meet with you urgently about your thesis draft. Can we schedule something today or tomorrow? Also, I've attached my feedback on your latest chapter - please review it before we meet. Thanks!",
+    "reply": "Dear Professor,\n\nThank you for your urgent message. I understand the time sensitivity. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to find the earliest available slot today or tomorrow. I'll review your feedback on the thesis chapter before our meeting.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_002",
+    "prospect_email": "Hi Zubair, we're very interested in your profile for our Data Scientist position. Please share more information about yourself and your background. Looking forward to hearing from you!",
+    "reply": "Hello Recruiter,\n\nThank you for considering me for the Data Scientist role. Here is my Data Science resume: https://drive.google.com/file/d/16lp87m0BbAx4uTPcdHGCIDHEdSQtywy0/view?usp=sharing and my LinkedIn profile: https://www.linkedin.com/in/zubair-atha/. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to schedule a call at your convenience.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_003",
+    "prospect_email": "Hey Zubair, we need to move our team meeting from 3pm to 5pm tomorrow. Hope that works!",
+    "reply": "Hi Team Lead,\n\nSure, 5 PM tomorrow works for me. Here's the Zoom link: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP).\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_004",
+    "prospect_email": "Zubair, could you take a look at my research report and give me your thoughts? It's due next week and I'd really value your input. Thanks!",
+    "reply": "Hi Colleague,\n\nI'd be happy to review your research report. Please send it over and I'll provide detailed feedback as soon as possible, well before your deadline next week.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_005",
+    "prospect_email": "Dear Zubair, we're excited to offer you a Software Engineer position at our startup. The role involves full-stack development. Are you interested? Please let us know by Friday.",
+    "reply": "Hello Hiring Team,\n\nThank you for the offer! I'm very interested in the Software Engineer position. Here's my SWE resume for your reference: https://drive.google.com/file/d/1NsbClvTx1MgSHhjvdcdpdTppI5MXxtYQ/view?usp=sharing. I'll confirm my decision by Friday.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_006",
+    "prospect_email": "Hi Zubair, I'm interested in collaborating on your machine learning project. Could you share your GitHub repository so I can review the code?",
+    "reply": "Dear Professor,\n\nThank you for your interest in collaborating! You can find my GitHub repository at https://github.com/zubairatha. The main project code is in the 'ml-project' branch. Please let me know if you need access to any specific repositories.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_007",
+    "prospect_email": "Hi Zubair, just confirming our meeting tomorrow at 2 PM. Can you share your phone number in case we need to reach you last minute?",
+    "reply": "Hi Partner,\n\nYes, I'll be there tomorrow at 2 PM. You can reach me at +16463925601 if needed. Looking forward to our discussion!\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_008",
+    "prospect_email": "Hello Zubair, we'd like to see your portfolio and some code samples before proceeding with the interview process. Could you share both?",
+    "reply": "Hello Tech Recruiter,\n\nOf course! Here is my portfolio: https://zubairatha.vercel.app/ and my GitHub profile with code samples: https://github.com/zubairatha. Please let me know if you need any specific projects highlighted.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_009",
+    "prospect_email": "Dear Zubair, we'd like to invite you to present at our research conference next month. Unfortunately, we cannot cover travel expenses. Would you still be interested in participating?",
+    "reply": "Dear Conference Organizer,\n\nThank you for the invitation. Unfortunately, due to the travel expense constraints, I won't be able to attend this time. I appreciate the opportunity and hope we can collaborate in the future.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_010",
+    "prospect_email": "Hey Zubair! We're planning the end-of-year event and need your input. Can we schedule a quick call this week? Also, what do you think about having it outdoors vs indoors?",
+    "reply": "Hi Event Coordinator,\n\nI'd be happy to help with the planning! Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to schedule a call this week. Regarding the venue, I think indoors would be better for weather reliability, but we can discuss more during our call.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_011",
+    "prospect_email": "Zubair, I've reviewed your draft paper. Overall it's strong, but the methodology section needs more detail. Also, consider adding more recent citations. The conclusion could be more impactful too.",
+    "reply": "Dear Reviewer,\n\nThank you for the detailed feedback on my draft. I'll expand the methodology section with more detail, update the citations with recent work, and strengthen the conclusion. I'll send the revised draft once these changes are complete.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_012",
+    "prospect_email": "Zubair, I have a family emergency and need to reschedule our meeting ASAP. Can we move it to next week? I'll call you if needed.",
+    "reply": "Hi Contact,\n\nI understand the situation. Let's reschedule for next week - I'm flexible on timing. Here's my Zoom link: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). You can also reach me at +16463925601 if you prefer to call.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_013",
+    "prospect_email": "Hi, I saw your profile and was wondering if you could share your LinkedIn? Want to learn more about your experience.",
+    "reply": "Hello Recruiter,\n\nSure! Here's my LinkedIn profile: https://www.linkedin.com/in/zubair-atha/. Feel free to connect and let me know if you have any questions about my background.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_014",
+    "prospect_email": "Zubair, could you send me your latest progress report? Also, I've attached a draft of my upcoming paper - would appreciate your feedback on it.",
+    "reply": "Dear Supervisor,\n\nI'll send over my latest progress report shortly. I'll also review your paper draft and provide detailed feedback by the end of this week.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_015",
+    "prospect_email": "Hi Zubair, confirming our team meeting on Friday at 10 AM. Can you share the Zoom link? Also, do you have any agenda items to add?",
+    "reply": "Hi Team Member,\n\nYes, I'll be there Friday at 10 AM. Here's the Zoom link: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). I'll send my agenda items by Thursday.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_016",
+    "prospect_email": "Hey, need to chat about something. When are you free?",
+    "reply": "Hello,\n\nI'd be happy to schedule a meeting. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to find a time that works for you. Looking forward to our discussion!\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_017",
+    "prospect_email": "Hi Zubair, we have openings for both Data Scientist and Software Engineer positions. Could you send resumes for both roles? We'll see which one fits better.",
+    "reply": "Hello Recruiter,\n\nThank you for considering me for both positions. Here are both resumes: Data Science resume: https://drive.google.com/file/d/16lp87m0BbAx4uTPcdHGCIDHEdSQtywy0/view?usp=sharing and Software Engineering resume: https://drive.google.com/file/d/1NsbClvTx1MgSHhjvdcdpdTppI5MXxtYQ/view?usp=sharing. I'm interested in both roles and happy to discuss which might be a better fit.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_018",
+    "prospect_email": "Dear Zubair, I trust this email finds you in good health. My name is Zohan Sharma, and I am a software engineer exploring opportunities to delve into deep learning. Your accomplishments in this field have inspired me, and I am reaching out to seek your guidance on the best learning path and potential projects to undertake. Your insights would mean a lot to me.",
+    "reply": "Dear Zohan,\n\nThank you for reaching out! I'm glad to hear about your interest in deep learning. As a starting point, I'd recommend focusing on fundamentals like neural networks, backpropagation, and then moving to practical projects. You can find some of my deep learning projects on my GitHub: https://github.com/zubairatha which might give you ideas for your own projects.\n\nFor learning resources, I'd suggest starting with online courses on neural networks and then working on hands-on projects like image classification or NLP tasks. If you'd like to discuss your learning path in more detail, feel free to connect with me on LinkedIn: https://www.linkedin.com/in/zubair-atha/ or we can schedule a call via my Calendly: https://calendly.com/za2366-columbia/30min.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_019",
+    "prospect_email": "Zubair, we need to meet about your thesis progress. Also, I've attached a draft of a paper I'm working on - would appreciate your thoughts before we meet. Can we schedule something this week?",
+    "reply": "Dear Advisor,\n\nThank you for reaching out. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to schedule a meeting this week. I'll review your paper draft and come prepared with feedback for our discussion.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_020",
+    "prospect_email": "Dear Zubair, congratulations on moving to the interview stage! We'd like to schedule a technical interview. Are you available next Tuesday or Wednesday afternoon? We'll send a Zoom link once confirmed.",
+    "reply": "Hello Interview Coordinator,\n\nThank you! I'm available both Tuesday and Wednesday afternoon. Here's my Zoom link for convenience: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). Please let me know which day works best for you.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_021",
+    "prospect_email": "Hello Zubair,\n\nWe're currently on the lookout for skilled individuals in machine learning, and your profile caught our eye. Would you mind sharing your resume with us? We'd love to explore potential opportunities together.\n\nBest,\nSalman Khan\nBhai Dynamics",
+    "reply": "Hello Salman,\n\nThank you for reaching out! I'm excited to explore potential opportunities with Bhai Dynamics. Please find my Data Science Resume here: https://drive.google.com/file/d/16lp87m0BbAx4uTPcdHGCIDHEdSQtywy0/view?usp=sharing. I'm looking forward to discussing how my machine learning skills can contribute to your team.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_022",
+    "prospect_email": "Hi Zubair,\n\nDid you get a chance to send the updated project slides to Prof. Rivera? He emailed me this morning asking for them, so I just wanted to confirm.\n\nLet me know!\n\nBest,\nAlex",
+    "reply": "Hi Alex,\n\nYes, I sent the updated project slides to Prof. Rivera earlier this week. I'll follow up with him to make sure he received them. Thanks for checking in!\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "golden_023",
+    "prospect_email": "Hi Zubair,\n\nHope you're doing well. I wanted to check if our meeting scheduled for tomorrow is still on. If not, could you suggest another time that works for you?\n\nThanks,\nAlex",
+    "reply": "Hi Alex,\n\nYes, our meeting tomorrow is still on! Looking forward to it. Here's the Zoom link for convenience: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). If anything changes, I'll let you know right away.\n\nBest Regards,\nZubair"
+  }
+]
