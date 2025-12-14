@@ -1,0 +1,239 @@
+/**
+ * Modern styles for content script elements
+ */
+
+/* Generate Button */
+.ai-email-generate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    margin: 5px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+    white-space: nowrap;
+}
+
+.ai-email-generate-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+}
+
+.ai-email-generate-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.ai-email-generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.ai-email-generate-btn .btn-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.ai-email-generate-btn .btn-icon.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Notification */
+.ai-email-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    max-width: 350px;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.ai-email-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.ai-email-notification-info {
+    background: #3b82f6;
+}
+
+.ai-email-notification-success {
+    background: #10b981;
+}
+
+.ai-email-notification-error {
+    background: #ef4444;
+}
+
+.ai-email-notification-warning {
+    background: #f59e0b;
+}
+
+/* Context Panel */
+.ai-email-context-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 420px;
+    max-height: 500px;
+    overflow-y: auto;
+    background: white;
+    border: 2px solid #6366f1;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 10001;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.context-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.context-header h3 {
+    margin: 0;
+    color: #6366f1;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.context-close {
+    border: none;
+    background: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #6b7280;
+    transition: all 0.2s;
+}
+
+.context-close:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.context-summary {
+    background: #f9fafb;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.context-item {
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+.context-item:last-child {
+    margin-bottom: 0;
+}
+
+.context-item strong {
+    color: #374151;
+}
+
+.context-section {
+    margin: 12px 0 8px 0;
+    font-weight: 600;
+    color: #111827;
+    font-size: 13px;
+}
+
+.context-subtitle {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.context-faq {
+    background: #ecfdf5;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border-left: 3px solid #10b981;
+}
+
+.context-faq-score {
+    color: #065f46;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.context-faq-answer {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.context-reply {
+    background: #eff6ff;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border-left: 3px solid #3b82f6;
+}
+
+.context-reply-title {
+    color: #1e40af;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.context-reply-content {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+/* Scrollbar styling */
+.ai-email-context-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ai-email-context-panel::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 4px;
+}
+
+.ai-email-context-panel::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.ai-email-context-panel::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
