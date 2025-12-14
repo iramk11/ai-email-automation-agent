@@ -6,7 +6,7 @@
 console.log('Graph RAG Email Assistant: Background service worker loaded');
 
 // Configuration
-const DEFAULT_API_URL = 'http://localhost:8000/api';
+const DEFAULT_API_URL = 'http://localhost:8001/api';
 
 /**
  * Handle extension installation

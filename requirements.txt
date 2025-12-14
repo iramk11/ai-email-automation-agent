@@ -1,24 +1,77 @@
-# Core Libraries
-openai==1.3.5
-pydantic==1.10.12
-pandas==2.1.1
-numpy==1.26.0
+# AI Email Automation Agent - Unified Requirements
+# Install all dependencies: pip install -r requirements.txt
 
-# Qdrant Vector DB
-qdrant-client==1.7.0
+# ============================================================================
+# Core Backend Dependencies
+# ============================================================================
 
-# Cloud SDK Integration
-google-cloud-aiplatform==1.39.0
-google-cloud-storage==2.12.0
-google-auth>=2.23.3,<3.0.0
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+httpx==0.25.2
 
-# RAG / Prompt Engineering
-langchain==0.0.331
-tiktoken==0.5.1
+# Data Validation
+pydantic==2.4.2
 
-# If using a REST API / webhook setup
-fastapi==0.103.2
-uvicorn==0.23.2
+# Vector Database
+qdrant-client==1.11.3
 
-# General Tools
-python-dotenv==1.0.0
+# Graph Database
+networkx==3.2.1
+
+# LLM Integration
+ollama==0.1.6
+google-generativeai>=0.3.0  # Optional: for Gemini support
+
+# Embeddings
+sentence-transformers==2.3.1
+
+# Numerical Computing
+numpy<2
+
+# HTTP & Utilities
+requests==2.31.0
+colorama==0.4.6
+
+# Caching
+cachetools==5.3.2
+
+# ============================================================================
+# Testing Dependencies
+# ============================================================================
+
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+
+# ============================================================================
+# Evaluation Dependencies (Optional - for running evaluation pipeline)
+# ============================================================================
+
+# ROUGE Score (for text similarity)
+rouge-score>=0.1.2
+
+# MAUVE Score (for distributional similarity)
+mauve-text>=0.2.0
+
+# Machine Learning (for evaluation metrics)
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Deep Learning (for MAUVE and ExPerT)
+torch>=2.0.0
+transformers>=4.30.0
+
+# ============================================================================
+# Development Dependencies (Optional)
+# ============================================================================
+
+# Jupyter (for notebooks)
+# jupyter>=1.0.0
+# ipykernel>=6.0.0
+
+# Code Quality
+# black>=23.0.0
+# flake8>=6.0.0
+# mypy>=1.0.0

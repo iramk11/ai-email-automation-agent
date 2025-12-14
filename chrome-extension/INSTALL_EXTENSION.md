@@ -5,15 +5,18 @@
 ### Step 1: Start Backend (Terminal 1)
 
 ```bash
-cd /Users/iramkamdar/RAG
+# From project root directory
+cd .
 
-# Option A: Use the startup script
+# Option A: Use the startup script (recommended)
 ./start_backend.sh
 
 # Option B: Manual start
-conda activate graph_rag  # or your environment
-python -m backend.main
+source email-agent/bin/activate  # Activate virtual environment
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8001 --reload
 ```
+
+**Note**: Backend runs on port 8001 by default (port 8000 may be in use). Update extension settings if needed.
 
 **✅ Success**: You should see "All services initialized successfully!"
 
@@ -22,14 +25,15 @@ python -m backend.main
 1. Open Chrome and go to: `chrome://extensions/`
 2. Toggle **"Developer mode"** ON (top-right)
 3. Click **"Load unpacked"**
-4. Select this folder: `/Users/iramkamdar/RAG/chrome-extension`
+4. Navigate to and select the `chrome-extension` folder in your project directory
 5. Extension will appear with 🤖 icon
 
 ### Step 3: Test
 
 1. Click the extension icon (🤖) in Chrome toolbar
-2. Click **"Test Connection"**
-3. Should show: **"Backend online and healthy"** ✅
+2. Verify API URL is set to: `http://localhost:8001/api` (or your backend port)
+3. Click **"Test Connection"**
+4. Should show: **"Backend online and healthy"** ✅
 
 ### Step 4: Use in Gmail
 

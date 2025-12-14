@@ -1,0 +1,243 @@
+[
+  {
+    "id": "benchmark_001",
+    "labels": {
+      "topic": "Professor/Academic",
+      "intents": ["schedule", "request_feedback"],
+      "artifacts": ["calendly", "draft"]
+    },
+    "subject": "Thesis Defense Preparation - Urgent Meeting Request",
+    "sender_email": "advisor.martinez@university.edu",
+    "prospect_email": "Hi Zubair, your thesis defense is approaching and we need to meet urgently to discuss your presentation. I've also prepared some feedback on your final draft that I'd like to go over. Can we schedule something within the next 48 hours?",
+    "reply": "Dear Professor Martinez,\n\nThank you for reaching out. I understand the urgency for the thesis defense preparation. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to find the earliest available slot. I'll review your feedback on the final draft before our meeting.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_002",
+    "labels": {
+      "topic": "Recruiter/Job Search",
+      "intents": ["send_materials", "schedule"],
+      "artifacts": ["ds_resume", "linkedin_profile", "calendly"]
+    },
+    "subject": "Machine Learning Engineer Role - Application Materials Needed",
+    "sender_email": "talent@ai-startup.com",
+    "prospect_email": "Hello Zubair, we're actively recruiting for a Machine Learning Engineer position and your background caught our attention. Could you please share your data science resume and LinkedIn profile? We'd also like to schedule a preliminary call to discuss the role further.",
+    "reply": "Hello Talent Team,\n\nThank you for considering me for the Machine Learning Engineer role. Here is my Data Science resume: https://drive.google.com/file/d/16lp87m0BbAx4uTPcdHGCIDHEdSQtywy0/view?usp=sharing and my LinkedIn profile: https://www.linkedin.com/in/zubair-atha/. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to schedule a call at your convenience.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_003",
+    "labels": {
+      "topic": "Group/Event Coordination",
+      "intents": ["reschedule"],
+      "artifacts": ["zoom_link"]
+    },
+    "subject": "Team Meeting Time Change",
+    "sender_email": "project.manager@university.edu",
+    "prospect_email": "Hey Zubair, we need to push back our project meeting from Friday 2 PM to Monday 11 AM due to a conflict. Hope that works for everyone!",
+    "reply": "Hi Project Manager,\n\nMonday at 11 AM works perfectly for me. Here's the Zoom link: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP).\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_004",
+    "labels": {
+      "topic": "Feedback & Reviews",
+      "intents": ["request_feedback"],
+      "artifacts": ["report"]
+    },
+    "subject": "Research Report Review Request",
+    "sender_email": "research.partner@university.edu",
+    "prospect_email": "Zubair, I've completed the first draft of our collaborative research report. Could you take a look and share your thoughts? It would really help to get your perspective before we finalize it.",
+    "reply": "Hi Research Partner,\n\nI'd be happy to review the research report. Please send it over and I'll provide detailed feedback as soon as possible.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_005",
+    "labels": {
+      "topic": "Recruiter/Job Search",
+      "intents": ["accept_or_decline"],
+      "artifacts": ["swe_resume"]
+    },
+    "subject": "Full-Stack Developer Position - Offer Extended",
+    "sender_email": "hiring@techstartup.io",
+    "prospect_email": "Dear Zubair, we're thrilled to extend an offer for our Full-Stack Developer position. The role involves working with React, Node.js, and cloud infrastructure. We'd love to have you on the team. Are you interested? Please respond by end of week.",
+    "reply": "Hello Hiring Team,\n\nThank you for the offer! I'm very interested in the Full-Stack Developer position. Here's my Software Engineering resume for your reference: https://drive.google.com/file/d/1NsbClvTx1MgSHhjvdcdpdTppI5MXxtYQ/view?usp=sharing. I'll confirm my decision by the end of the week.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_006",
+    "labels": {
+      "topic": "Professor/Academic",
+      "intents": ["request_info"],
+      "artifacts": ["github"]
+    },
+    "subject": "Code Review for Research Project",
+    "sender_email": "collab.prof@university.edu",
+    "prospect_email": "Hi Zubair, I'm working on a similar research project and would love to see how you've implemented your algorithms. Could you share your GitHub repository? I'm particularly interested in your deep learning implementations.",
+    "reply": "Dear Professor,\n\nThank you for your interest! You can find my GitHub repository at https://github.com/zubairatha. The deep learning implementations are in the 'deep-learning' branch. Please let me know if you need access to any specific repositories or have questions.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_007",
+    "labels": {
+      "topic": "Scheduling",
+      "intents": ["confirm"],
+      "artifacts": ["phone_number"]
+    },
+    "subject": "Meeting Confirmation - Tomorrow 3 PM",
+    "sender_email": "business.partner@company.com",
+    "prospect_email": "Hi Zubair, just double-checking that our meeting tomorrow at 3 PM is still confirmed. Can you share your contact number in case we need to reach you for any last-minute changes?",
+    "reply": "Hi Business Partner,\n\nYes, I'll be there tomorrow at 3 PM. You can reach me at +16463925601 if needed. Looking forward to our discussion!\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_008",
+    "labels": {
+      "topic": "Recruiter/Job Search",
+      "intents": ["send_materials"],
+      "artifacts": ["portfolio", "github"]
+    },
+    "subject": "Software Developer Role - Work Samples Request",
+    "sender_email": "recruiter@devcompany.com",
+    "prospect_email": "Hello Zubair, we're evaluating candidates for our Software Developer position and would like to see examples of your work. Could you share your portfolio and GitHub repositories? This will help us better understand your coding style and project experience.",
+    "reply": "Hello Recruiter,\n\nOf course! Here is my portfolio: https://zubairatha.vercel.app/ and my GitHub profile: https://github.com/zubairatha. Please let me know if you need any specific projects highlighted or have questions about my work.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_009",
+    "labels": {
+      "topic": "Professor/Academic",
+      "intents": ["accept_or_decline"],
+      "artifacts": []
+    },
+    "subject": "Invitation to Present at Academic Workshop",
+    "sender_email": "workshop.organizer@academic.org",
+    "prospect_email": "Dear Zubair, we'd like to invite you to present your research at our upcoming academic workshop next month. The event will be held virtually, but we cannot provide an honorarium. Would you be interested in participating?",
+    "reply": "Dear Workshop Organizer,\n\nThank you for the invitation. Unfortunately, due to my current commitments and schedule constraints, I won't be able to participate this time. I appreciate the opportunity and hope we can collaborate in the future.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_010",
+    "labels": {
+      "topic": "Group/Event Coordination",
+      "intents": ["schedule", "request_feedback"],
+      "artifacts": ["calendly"]
+    },
+    "subject": "Conference Planning Meeting + Venue Feedback",
+    "sender_email": "event.team@university.edu",
+    "prospect_email": "Hey Zubair! We're organizing the annual research conference and need your input on logistics. Can we schedule a planning session this week? Also, we're considering two venue options - what are your thoughts on an outdoor vs indoor setting?",
+    "reply": "Hi Event Team,\n\nI'd be happy to help with the conference planning! Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to schedule a session this week. Regarding the venue, I'd recommend an indoor setting for better audio-visual setup and weather reliability, but we can discuss this further during our meeting.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_011",
+    "labels": {
+      "topic": "Feedback & Reviews",
+      "intents": ["share_feedback"],
+      "artifacts": ["draft"]
+    },
+    "subject": "Review Comments on Your Research Paper",
+    "sender_email": "peer.reviewer@journal.edu",
+    "prospect_email": "Zubair, I've completed my review of your research paper draft. The methodology is solid, but I suggest expanding the related work section and adding more experimental results. The discussion section could also benefit from addressing potential limitations more explicitly.",
+    "reply": "Dear Reviewer,\n\nThank you for the comprehensive feedback on my draft. I'll expand the related work section, add more experimental results, and strengthen the discussion by addressing limitations more explicitly. I'll send the revised draft once these improvements are complete.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_012",
+    "labels": {
+      "topic": "Scheduling",
+      "intents": ["reschedule"],
+      "artifacts": ["zoom_link", "phone_number"]
+    },
+    "subject": "URGENT: Meeting Reschedule Required",
+    "sender_email": "urgent.client@company.com",
+    "prospect_email": "Zubair, I have a family emergency and need to reschedule our meeting that was planned for tomorrow. Can we move it to next week? I may need to call you directly if that's easier.",
+    "reply": "Hi Client,\n\nI understand the situation. Let's reschedule for next week - I'm flexible on timing. Here's my Zoom link: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). You can also reach me at +16463925601 if you prefer to call.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_013",
+    "labels": {
+      "topic": "Recruiter/Job Search",
+      "intents": ["request_info"],
+      "artifacts": ["linkedin_profile"]
+    },
+    "subject": "Background Information Request",
+    "sender_email": "hr@datacompany.com",
+    "prospect_email": "Hi Zubair, I came across your profile and I'm interested in learning more about your professional background. Could you share your LinkedIn profile? I'd like to understand your experience better before we proceed.",
+    "reply": "Hello HR Team,\n\nSure! Here's my LinkedIn profile: https://www.linkedin.com/in/zubair-atha/. Feel free to connect and let me know if you have any questions about my background or experience.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_014",
+    "labels": {
+      "topic": "Professor/Academic",
+      "intents": ["send_materials", "request_feedback"],
+      "artifacts": ["report", "draft"]
+    },
+    "subject": "Progress Update and Manuscript Review",
+    "sender_email": "supervisor@university.edu",
+    "prospect_email": "Zubair, could you send me your latest progress report on the research project? Additionally, I've attached a draft of my upcoming publication - I'd appreciate your feedback on the experimental design section.",
+    "reply": "Dear Supervisor,\n\nI'll send over my latest progress report shortly. I'll also review your manuscript draft and provide detailed feedback on the experimental design section by the end of this week.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_015",
+    "labels": {
+      "topic": "Group/Event Coordination",
+      "intents": ["confirm", "request_info"],
+      "artifacts": ["zoom_link"]
+    },
+    "subject": "Team Meeting Confirmation and Agenda Items",
+    "sender_email": "team.lead@university.edu",
+    "prospect_email": "Hi Zubair, confirming our team meeting scheduled for Thursday at 11 AM. Can you share the Zoom link? Also, do you have any agenda items you'd like to add to our discussion?",
+    "reply": "Hi Team Lead,\n\nYes, I'll be there Thursday at 11 AM. Here's the Zoom link: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). I'll send my agenda items by Wednesday.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_016",
+    "labels": {
+      "topic": "Scheduling",
+      "intents": ["schedule"],
+      "artifacts": ["calendly"]
+    },
+    "subject": "Need to discuss something - when are you available?",
+    "sender_email": "colleague@university.edu",
+    "prospect_email": "Hey Zubair, I need to chat with you about a project we're working on. When would be a good time for you?",
+    "reply": "Hello Colleague,\n\nI'd be happy to schedule a meeting. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to find a time that works for you. Looking forward to our discussion!\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_017",
+    "labels": {
+      "topic": "Recruiter/Job Search",
+      "intents": ["send_materials"],
+      "artifacts": ["ds_resume", "swe_resume"]
+    },
+    "subject": "Dual Role Opportunity - Data Science and Software Engineering",
+    "sender_email": "recruiter@hybridtech.com",
+    "prospect_email": "Hi Zubair, we have exciting opportunities for both Data Scientist and Software Engineer roles at our company. Your background seems suitable for either position. Could you send resumes for both roles so we can determine the best fit?",
+    "reply": "Hello Recruiter,\n\nThank you for considering me for both positions. Here are both resumes: Data Science resume: https://drive.google.com/file/d/16lp87m0BbAx4uTPcdHGCIDHEdSQtywy0/view?usp=sharing and Software Engineering resume: https://drive.google.com/file/d/1NsbClvTx1MgSHhjvdcdpdTppI5MXxtYQ/view?usp=sharing. I'm interested in both roles and happy to discuss which might be a better fit.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_018",
+    "labels": {
+      "topic": "Feedback & Reviews",
+      "intents": ["request_feedback"],
+      "artifacts": []
+    },
+    "subject": "Presentation Review Needed",
+    "sender_email": "peer@university.edu",
+    "prospect_email": "Zubair, I'm preparing a presentation for next week's seminar and would really value your input. Could you take a look when you have a moment? No pressure, just whenever you get a chance.",
+    "reply": "Hi Peer,\n\nI'd be happy to review your presentation. Please send it over and I'll provide constructive feedback as soon as I can.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_019",
+    "labels": {
+      "topic": "Professor/Academic",
+      "intents": ["schedule", "request_feedback"],
+      "artifacts": ["calendly", "draft"]
+    },
+    "subject": "Dissertation Progress Meeting + Paper Review",
+    "sender_email": "advisor@university.edu",
+    "prospect_email": "Zubair, we should meet to discuss your dissertation progress. I've also attached a draft of a collaborative paper I'm working on - would appreciate your thoughts before we meet. Can we schedule something this week?",
+    "reply": "Dear Advisor,\n\nThank you for reaching out. Please use my Calendly link (https://calendly.com/za2366-columbia/30min) to schedule a meeting this week. I'll review your paper draft and come prepared with feedback for our discussion.\n\nBest Regards,\nZubair"
+  },
+  {
+    "id": "benchmark_020",
+    "labels": {
+      "topic": "Recruiter/Job Search",
+      "intents": ["schedule"],
+      "artifacts": ["zoom_link"]
+    },
+    "subject": "Technical Interview Scheduling - ML Engineer Position",
+    "sender_email": "interview@techcompany.com",
+    "prospect_email": "Dear Zubair, congratulations on advancing to the interview stage! We'd like to schedule a technical interview for our Machine Learning Engineer position. Are you available next Monday or Tuesday afternoon? We'll coordinate the Zoom link once we confirm the time.",
+    "reply": "Hello Interview Coordinator,\n\nThank you! I'm available both Monday and Tuesday afternoon. Here's my Zoom link for convenience: https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1 (Meeting ID: 575 663 1049, Passcode: 4Jp5UP). Please let me know which day works best for you.\n\nBest Regards,\nZubair"
+  }
+]
+

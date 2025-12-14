@@ -1,0 +1,118 @@
+1. two types of resume: ds, swe
+ds: https://drive.google.com/file/d/16lp87m0BbAx4uTPcdHGCIDHEdSQtywy0/view?usp=sharing
+swe: https://drive.google.com/file/d/1NsbClvTx1MgSHhjvdcdpdTppI5MXxtYQ/view?usp=sharing
+2. linkedin link: https://www.linkedin.com/in/zubair-atha/
+3. portfolio link: https://zubairatha.vercel.app/
+4. photography link: https://www.instagram.com/zubairatha/
+5. contact - phone number: +16463925601
+6. zoom link: 
+https://us05web.zoom.us/j/5756631049?pwd=2whWm7gb5MHL5GIspFbviES0GQPuyE.1
+
+Meeting ID: 575 663 1049
+Passcode: 4Jp5UP
+
+7. calendly:
+https://calendly.com/za2366-columbia/30min
+
+8. github link: https://github.com/zubairatha
+
+9. constant conversation with research prof (so that we can create a node for a person and when the same person mails, we can have the emails by him)
+
+
+### previous labels for reference
+
+{
+  "topics": [
+    "Feedback & Reviews",
+    "Group/Event Coordination",
+    "Professor/Academic",
+    "Recruiter/Job Search",
+    "Scheduling",
+    "Submission & Reviews"
+  ],
+  "intents": [
+    "accept_or_decline",
+    "confirm",
+    "follow_up",
+    "request_feedback",
+    "request_info",
+    "reschedule",
+    "schedule",
+    "send_materials",
+    "share_feedback"
+  ],
+  "artifacts": [
+    "application_form",
+    "calendar_invite",
+    "draft",
+    "evaluation_sheet",
+    "feedback_form",
+    "github",
+    "job_description",
+    "linkedin_profile",
+    "meeting_link",
+    "offer_letter",
+    "portfolio",
+    "report",
+    "ds_resume",
+    "swe_resume",
+    "review_link",
+    "zoom_link",
+    "phone_number"
+  ]
+}
+
+
+note: i want to cover most of the intents & topics. artifacts can differ. 
+
+### OUTPUT FORMAT
+
+{
+"id": "a1bc948c-4475-4b2f-ada8-84de14a52a57",
+    "labels": {
+      "topic": "Professor/Academic",
+      "intents": [
+        "accept_or_decline",
+        "share_feedback"
+      ],
+      "artifacts": [
+        "offer_letter"
+      ]
+    },
+    "subject": "Offer for RA Position in Our Lab",
+    "sender_email": "jane.smith@university.edu",
+    "prospect_email": "Hi Zubair,\n\nI hope this message finds you well. Im delighted to inform you that your application for the Research Assistant position in our lab has been successful. Were excited about the potential contributions you can bring to our team and would like to formally extend an offer.\n\nAttached is the offer letter outlining your start date, compensation, and key responsibilities. Please review it carefully and let me know if you have any questions or need clarification.\n\nBest,  \nDr. Jane Smith  \nProfessor of Biology",
+    "reply": "Hi Dr. Smith,\n\nThank you for offering me the Research Assistant position in your lab. Im very excited about this opportunity and am happy to accept the offer.  \n\nIll review and sign the attached offer letter shortly and send the copy back for confirmation. Please let me know if you require any additional information from my side.\n\nBest regards,  \nZubair Atha"
+  }
+
+
+### GRAPH STRUCTURE
+
+G = nx.DiGraph()
+
+for item in labels:
+    label_data = item.get("labels", {})
+    topic = label_data.get("topic")
+    intents = label_data.get("intents", [])
+    artifacts = label_data.get("artifacts", [])
+
+    if not topic and not intents and not artifacts:
+        continue
+
+    # Add topic node
+    if topic:
+        G.add_node(topic, type="topic")
+
+    # Add intents as nodes and edges
+    for intent in intents:
+        G.add_node(intent, type="intent")
+        if topic:
+            G.add_edge(topic, intent, relation="HAS_INTENT")
+
+    # Add artifacts as nodes and edges
+    for artifact in artifacts:
+        G.add_node(artifact, type="artifact")
+        if topic:
+            G.add_edge(topic, artifact, relation="USES_ARTIFACT")
+
+

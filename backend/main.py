@@ -6,12 +6,14 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+import networkx as nx
 
 from backend.config import (
     API_HOST, API_PORT, CORS_ORIGINS, BASE_DIR,
     QDRANT_DATA_PATH, QDRANT_COLLECTION_NAME,
     GRAPH_DATA_PATH, EMBEDDING_MODEL, OLLAMA_MODEL,
-    KNOWN_INTENTS, TOP_K_RESULTS, AUTO_SEND_THRESHOLD,
+    KNOWN_INTENTS, KNOWN_ARTIFACTS, ARTIFACT_DICTIONARY,
+    TOP_K_RESULTS, AUTO_SEND_THRESHOLD,
     DEFAULT_USER_NAME, DEFAULT_USER_TONE
 )
 from backend.api.routes import router, set_rag_service
@@ -62,8 +64,55 @@ async def lifespan(app: FastAPI):
         
         graph_service = GraphService(graph_path=str(GRAPH_DATA_PATH) if GRAPH_DATA_PATH.exists() else None)
         
-        # If graph wasn't loaded from file, build it from labels
-        if not graph_service.health_check():
+        # ALWAYS rebuild from labels if node_to_email_ids is empty (old format graph)
+        # This ensures we have the email_id mappings needed for intersection search
+        if not graph_service.node_to_email_ids or len(graph_service.node_to_email_ids) == 0:
+            logger.info("⚠️ Graph has no email_id mappings (old format), rebuilding from labels...")
+            # Try multiple possible label file locations
+            label_files = [
+                BASE_DIR / "data" / "generated_email_pairs.json",  # New format from notebook
+                BASE_DIR / "student_email_pairs.labels.jsonl",  # Old format
+            ]
+            
+            labels = []
+            labels_file = None
+            for label_file in label_files:
+                if label_file.exists():
+                    labels_file = label_file
+                    break
+            
+            if labels_file:
+                import json
+                logger.info(f"Loading labels from {labels_file}")
+                
+                if labels_file.suffix == '.json':
+                    # JSON format (generated_email_pairs.json)
+                    with open(labels_file, 'r', encoding='utf-8') as f:
+                        labels = json.load(f)
+                else:
+                    # JSONL format
+                    with open(labels_file, 'r', encoding='utf-8') as f:
+                        for line in f:
+                            if line.strip():
+                                labels.append(json.loads(line))
+                
+                # Clear old graph and rebuild
+                graph_service.graph = nx.DiGraph()
+                graph_service.email_id_to_reply = {}
+                graph_service.node_to_email_ids = {}
+                
+                graph_service.build_from_labels(labels)
+                logger.info(f"✅ Rebuilt graph with {len(graph_service.graph.nodes())} nodes, {len(graph_service.graph.edges())} edges")
+                logger.info(f"✅ Created {len(graph_service.email_id_to_reply)} email_id->reply mappings")
+                logger.info(f"✅ Created {len(graph_service.node_to_email_ids)} node->email_id mappings")
+                
+                # Save for next time
+                graph_service.save_graph(str(GRAPH_DATA_PATH))
+                logger.info(f"✅ Saved graph with mappings to {GRAPH_DATA_PATH}")
+            else:
+                logger.warning(f"⚠️ Labels file not found. Tried: {[str(f) for f in label_files]}")
+                logger.warning("⚠️ Intersection search will not work without email_id mappings!")
+        elif not graph_service.health_check():
             logger.info("Graph not found, building from labels file...")
             # Try multiple possible label file locations
             label_files = [
@@ -106,13 +155,15 @@ async def lifespan(app: FastAPI):
         ollama_service = OllamaService(model_name=OLLAMA_MODEL)
         services['ollama'] = ollama_service
         
-        # Initialize RAG service
+        # Initialize RAG service (with enhanced methodology)
         rag_service = RAGService(
             embedding_service=embedding_service,
             qdrant_service=qdrant_service,
             graph_service=graph_service,
             ollama_service=ollama_service,
             known_intents=KNOWN_INTENTS,
+            known_artifacts=KNOWN_ARTIFACTS,
+            artifact_dict=ARTIFACT_DICTIONARY,
             top_k=TOP_K_RESULTS,
             auto_send_threshold=AUTO_SEND_THRESHOLD,
             default_user_name=DEFAULT_USER_NAME,

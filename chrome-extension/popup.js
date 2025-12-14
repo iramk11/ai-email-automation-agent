@@ -22,7 +22,7 @@ function loadSettings() {
     chrome.storage.sync.get(
         ['apiUrl', 'autoInsert', 'confidenceThreshold'],
         (items) => {
-            apiUrlInput.value = items.apiUrl || 'http://localhost:8000/api';
+            apiUrlInput.value = items.apiUrl || 'http://localhost:8001/api';
             autoInsertCheckbox.checked = items.autoInsert !== false;
             confidenceThresholdInput.value = items.confidenceThreshold || 0.85;
             

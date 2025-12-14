@@ -25,6 +25,11 @@ venv/
 env/
 ENV/
 .venv
+email-agent/
+eval_venv/
+test_venv/
+*_venv/
+*.venv
 
 # IDEs
 .vscode/
@@ -39,7 +44,11 @@ ENV/
 
 # Qdrant data
 qdrant_data/
+graphrag_local/qdrant_data/
 *.gpickle
+
+# Graph data
+graph_data.gpickle
 
 # Logs
 *.log
@@ -56,8 +65,48 @@ chrome-extension/*.pem
 # Test outputs
 test_output/
 *.test
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+*.cover
 
 # Temporary files
 tmp/
 temp/
 *.tmp
+*.swp
+*.swo
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+*.bak
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
