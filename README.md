@@ -144,8 +144,6 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
 
 4. **Look for the "🤖 Generate Reply" button** near the reply box
 
-   ![Extension Button](images/1.png)
-
 5. **Click "🤖 Generate Reply"**
    - The extension will extract the email content
    - Send it to your local backend
@@ -155,23 +153,11 @@ The system uses a Jupyter notebook to build the knowledge base from your email d
      - Style examples for tone matching
    - Insert it into the reply box
 
-   ![Reply Generation](images/2.png)
-
 6. **Review the generated draft** - You can see the context used for generation
-
-   ![Context Panel](images/3.png)
 
 7. **Review and edit** the generated draft as needed
 
-   ![Generated Reply](images/4.png)
-
 8. **Send** when satisfied!
-
-### Extension Popup & Settings
-
-![Extension Popup](images/5.png)
-
-![Settings Configuration](images/6.png)
 
 ##  Configuration
 
