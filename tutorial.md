@@ -1,511 +1,594 @@
-# AI Email Automation Agent - Complete Project Guide
+# Complete Tutorial: Getting Started with AI Email Automation Agent
 
-This comprehensive guide maps all components of the project, showing where each feature, test, and documentation exists.
+Welcome! This tutorial will guide you through setting up and using the AI Email Automation Agent from scratch. By the end, you'll have a fully functional system that generates intelligent email replies using your own data and writing style.
+
+---
 
 ## 📋 Table of Contents
 
-1. [Code Quality Components](#code-quality-components)
-2. [Functionality Components](#functionality-components)
-3. [Experiment & Results Components](#experiment--results-components)
-4. [Tutorial & Documentation Components](#tutorial--documentation-components)
-5. [Project Structure](#project-structure)
-6. [Quick Reference](#quick-reference)
+1. [What You'll Build](#what-youll-build)
+2. [Prerequisites](#prerequisites)
+3. [Step 1: Install System Dependencies](#step-1-install-system-dependencies)
+4. [Step 2: Set Up Knowledge Base](#step-2-set-up-knowledge-base)
+5. [Step 3: Set Up Backend](#step-3-set-up-backend)
+6. [Step 4: Install Chrome Extension](#step-4-install-chrome-extension)
+7. [Step 5: Generate Your First Reply](#step-5-generate-your-first-reply)
+8. [Troubleshooting](#troubleshooting)
+9. [Next Steps](#next-steps)
 
 ---
 
-## Code Quality Components
+## What You'll Build
 
-### ✅ Clean and Organized Code Structure
+You'll create an AI-powered email assistant that:
 
-**Location**: `backend/`
-
-- **API Layer**: `backend/api/routes.py` - FastAPI endpoints
-- **Services Layer**: `backend/services/` - Business logic
-  - `embedding_service.py` - Text embedding with caching
-  - `qdrant_service.py` - Vector database operations
-  - `graph_service.py` - Knowledge graph operations
-  - `ollama_service.py` - LLM integration
-  - `gemini_service.py` - Alternative LLM integration
-  - `rag_service.py` - Main RAG orchestration
-  - `cache_service.py` - Performance caching
-- **Models Layer**: `backend/models/schemas.py` - Pydantic models
-- **Configuration**: `backend/config.py` - Settings and constants
-
-**Chrome Extension**:
-- `chrome-extension-v2/` - Modern extension with Outlook support
-- `chrome-extension/` - Original Gmail-only extension
-
-### ✅ Comprehensive Documentation
-
-**Main Documentation**:
-- `README.md` - Installation, setup, usage guide, architecture, and evaluation results
-- `tutorial.md` - This file - complete component mapping and tutorial guide
-
-**Extension Documentation**:
-- `chrome-extension-v2/README.md` - Extension features and usage
-- `chrome-extension-v2/INSTALL.md` - Quick installation guide
-- `chrome-extension-v2/DEBUG_OUTLOOK.md` - Outlook debugging guide
-
-**Evaluation Documentation**:
-- `eval/README.md` - Evaluation pipeline quick start
-- `eval/EVAL_DOCUMENTATION.md` - Comprehensive evaluation guide
-- `eval/EVALUATION_RESULTS_FINAL.md` - Final evaluation results
-
-**Code Documentation**:
-- Docstrings in all service files (`backend/services/*.py`)
-- API endpoint documentation (FastAPI auto-generated)
-- Inline comments for complex logic
-
-### ✅ Unit Tests and Error Handling
-
-**Unit Tests Location**: `backend/tests/unit/`
-
-- `test_embedding_service.py` - Embedding service tests
-- `test_ollama_service.py` - Ollama service tests
-- `test_rag_service.py` - RAG service tests
-- `test_cache_service.py` - Cache service tests
-
-**Test Configuration**:
-- `pytest.ini` - Pytest configuration with coverage
-- `backend/tests/conftest.py` - Shared fixtures and mocks
-- `backend/requirements.txt` - Includes pytest, pytest-asyncio, pytest-cov
-
-**Error Handling**:
-- **98+ try/except blocks** throughout codebase
-- `backend/api/routes.py` - HTTPException handling for API errors
-- `backend/services/*.py` - Service-level error handling with logging
-- Graceful degradation in evaluation pipeline
-
-**Running Tests**:
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=backend --cov-report=html
-
-# Run specific test file
-pytest backend/tests/unit/test_embedding_service.py
-
-# Run integration tests
-pytest backend/tests/integration/
-```
-
-### ✅ Code Optimization
-
-**Caching**:
-- `backend/services/cache_service.py` - TTL-based caching service
-- `backend/services/embedding_service.py` - Cached embeddings (2-hour TTL)
-- FAQ search caching (30-minute TTL)
-
-**Async Operations**:
-- `backend/api/routes.py` - Async endpoints (`async def`)
-- `backend/services/rag_service.py` - Async reply generation
-- FastAPI async support throughout
-
-**Performance Features**:
-- Batch embedding processing (`encode_batch`)
-- Connection pooling (Qdrant client)
-- Lazy loading in evaluation pipeline
+- **Understands context** from your email history using Graph RAG
+- **Generates personalized replies** matching your writing style
+- **Works with Gmail and Outlook** via a Chrome extension
+- **Runs completely locally** - your data never leaves your machine
+- **Learns from your FAQs** and email patterns
 
 ---
 
-## Functionality Components
+## Prerequisites
 
-### ✅ Successful Implementation of Proposed Features
+Before starting, ensure you have:
 
-**Core Features**:
-1. **Graph RAG Email Reply Generation**
-   - Location: `backend/services/rag_service.py`
-   - Endpoint: `POST /api/generate-reply`
-   - Integration: Chrome extension → Backend → Services
-
-2. **Intent & Artifact Classification**
-   - Location: `backend/services/ollama_service.py::classify_intent_and_artifacts()`
-   - Configuration: `backend/config.py` (KNOWN_INTENTS, KNOWN_ARTIFACTS)
-
-3. **Multi-Provider Support**
-   - Gmail: `chrome-extension-v2/content.js` (Gmail selectors)
-   - Outlook: `chrome-extension-v2/content.js` (Outlook selectors)
-   - Documentation: `chrome-extension-v2/DEBUG_OUTLOOK.md`
-
-4. **Chrome Extension Integration**
-   - Location: `chrome-extension-v2/`
-   - Files: `content.js`, `background.js`, `popup.html/js`
-
-### ✅ Robust Error Handling
-
-**Error Handling Locations**:
-- `backend/api/routes.py` - API error responses (HTTPException)
-- `backend/services/ollama_service.py` - LLM error handling
-- `backend/services/qdrant_service.py` - Database error handling
-- `backend/services/graph_service.py` - Graph operation errors
-- `backend/main.py` - Application startup error handling
-
-**Error Response Model**:
-- `backend/models/schemas.py::ErrorResponse` - Standardized error format
-
-**Logging**:
-- All services use Python `logging` module
-- Log levels: INFO, ERROR, DEBUG
-- Structured logging throughout
-
-### ✅ Performance Optimization
-
-**Optimizations Implemented**:
-1. **Caching** (`backend/services/cache_service.py`)
-   - Embedding cache: 2-hour TTL, 500 items max
-   - FAQ cache: 30-minute TTL, 200 items max
-
-2. **Async Operations**
-   - All API endpoints are async
-   - Non-blocking I/O for database operations
-
-3. **Batch Processing**
-   - `embedding_service.py::encode_batch()` - Process multiple texts
-
-**Performance Monitoring**:
-- Cache statistics: `cache_service.py::stats()`
-- Logging for performance tracking
-
-### ✅ Integration Testing
-
-**Integration Tests Location**: `backend/tests/integration/`
-
-- `test_api_integration.py` - API endpoint integration tests
-  - Tests: Root endpoint, health check, reply generation
-  - Error scenarios: Validation errors, service errors
-
-- `test_full_pipeline.py` - End-to-end RAG pipeline tests
-  - Full workflow: Email → Classification → Retrieval → Generation
-  - Multiple intents handling
-  - Error recovery scenarios
-  - Empty context handling
-
-**Running Integration Tests**:
-```bash
-# Run all integration tests
-pytest backend/tests/integration/
-
-# Run specific integration test
-pytest backend/tests/integration/test_api_integration.py
-```
-
-**Existing Integration Tests**:
-- `test_backend.py` - Backend API tests (root level)
-- `test_email_extraction.py` - Email extraction tests (root level)
-- `eval/test_interchangeable.py` - Interchangeable artifacts/intents tests
+- **Python 3.10 or higher** installed
+- **Chrome browser** (latest version)
+- **Git** (to clone the repository)
+- **8GB+ RAM** (for running Ollama and Qdrant)
+- **Basic command-line knowledge**
 
 ---
 
-## Experiment & Results Components
+## Step 1: Install System Dependencies
 
-### ✅ Reproducible Experiments
+### 1.1 Install Ollama
 
-**Evaluation Scripts**:
-- `eval/run_eval.py` - Main evaluation runner
-  - Command-line arguments for dataset, range, output
-  - Reproducible with same parameters
+Ollama is the local LLM runtime that powers the AI reply generation.
 
-**Usage**:
+**macOS/Linux:**
 ```bash
-# Test on first 5 emails
-python eval/run_eval.py --limit 5
-
-# Full evaluation
-python eval/run_eval.py --dataset data/golden_dataset_benchmark.json
-
-# Custom range
-python eval/run_eval.py --limit 10 --start-idx 5
+curl -fsSL https://ollama.ai/install.sh | sh
 ```
 
-### ✅ Well-Documented Experimental Setup
+**Windows:**
+Download the installer from [ollama.ai](https://ollama.ai) and run it.
 
-**Setup Documentation**:
-- `eval/README.md` - Quick start guide
-- `eval/EVAL_DOCUMENTATION.md` - Comprehensive setup instructions
+**Verify installation:**
+```bash
+ollama --version
+```
 
-**Setup Validation**:
-- `eval/validate_setup.py` - Validates evaluation environment
-- Checks: Dependencies, services, data availability
+### 1.2 Download Llama 3 Model
 
-**Dependencies**:
-- `eval/requirements.txt` - Evaluation-specific packages
-- Optional dependencies with lazy loading
+The system uses Llama 3 for generating replies. Download it:
 
-### ✅ Clear Presentation of Results
+```bash
+ollama pull llama3
+```
 
-**Results Location**: `eval/results/`
+This may take several minutes depending on your internet connection (~4.7GB download).
 
-**Visualizations**:
-- `eval/results/plots/aggregate_metrics.png` - Overall performance
-- `eval/results/plots/metric_distributions.png` - Score distributions
-- `eval/results/plots/performance_by_email.png` - Per-email breakdown
-- `eval/results/plots/metric_correlation.png` - Metric correlations
+**Verify the model:**
+```bash
+ollama list
+```
 
-**Result Files**:
-- `eval/results/results_<timestamp>.json` - Detailed JSON results
-- `eval/EVALUATION_RESULTS_FINAL.md` - Formatted results summary
-- `README.md` - Results analysis and insights (in Evaluation Results section)
+You should see `llama3` in the list.
 
-**Plot Generation**:
-- `eval/generate_plots.py` - Creates visualization plots
-- `eval/create_formatted_results.py` - Formats results for presentation
+### 1.3 Install Qdrant (Vector Database)
 
-### ✅ Analysis Scripts and Notebooks
+Qdrant stores embeddings for semantic search. Install it:
 
-**Jupyter Notebooks**:
-- `graphrag_local/graph_rag_updated2.ipynb` - Main knowledge base builder
-- `graphrag_local/graph_rag_enhanced.ipynb` - Enhanced RAG notebook
-- `graphrag_local/graph_rag_with_email_contexts.ipynb` - Context-aware RAG
-- `zubair_approach/generate_email_dataset.ipynb` - Dataset generation
+**macOS (using Homebrew):**
+```bash
+brew install qdrant
+```
 
-**Analysis Scripts**:
-- `eval/metrics.py` - All metric calculations (ROUGE, ExPerT, LLM Judge)
-- `eval/utils.py` - Helper functions (hit rate calculation)
-- `eval/evaluator.py` - Main evaluation orchestrator
+**Linux:**
+```bash
+curl -fsSL https://get.qdrant.io/install.sh | sh
+```
 
-**Data Files**:
-- `data/golden_dataset_benchmark.json` - Benchmark dataset
-- `data/golden_dataset.json` - Full dataset
+**Windows:**
+Download from [qdrant.io](https://qdrant.io/documentation/guides/installation/) or use Docker:
+```bash
+docker pull qdrant/qdrant
+docker run -p 6333:6333 qdrant/qdrant
+```
+
+**Start Qdrant:**
+```bash
+qdrant
+```
+
+Keep this running in a terminal. Qdrant will be available at `http://localhost:6333`.
+
+---
+
+## Step 2: Set Up Knowledge Base
+
+The knowledge base is built from your email data and FAQs. This step creates the graph structure and vector embeddings.
+
+### 2.1 Prepare Your Data
+
+Ensure you have the required data files:
+
+- `data/faq_updated.csv` - Your FAQ data
 - `data/generated_email_pairs.json` - Labeled email pairs
-- `data/faq_updated.csv` - FAQ data
 
----
+If you don't have these files, the notebook will create sample data structures.
 
-## Tutorial & Documentation Components
+### 2.2 Build the Knowledge Base
 
-### ✅ Clear Installation Instructions
-
-**Main Installation Guide**:
-- `README.md` - Complete installation steps
-  - Prerequisites
-  - Step-by-step setup
-  - Backend configuration
-  - Extension installation
-
-**Quick Installation**:
-- `chrome-extension-v2/INSTALL.md` - 5-minute quick start
-- `chrome-extension/INSTALL_EXTENSION.md` - Extension-specific guide
-
-**Installation Scripts**:
-- `start_backend.sh` - Backend startup script
-- `restart_backend.sh` - Backend restart script
-
-### ✅ Environment Setup Guide
-
-**Environment Configuration**:
-- `backend/requirements.txt` - Python dependencies
-- `eval/requirements.txt` - Evaluation dependencies
-- `README.md` - Virtual environment setup (venv/conda)
-
-**Configuration Files**:
-- `backend/config.py` - All configuration settings
-  - Qdrant settings
-  - Ollama settings
-  - RAG parameters
-  - API settings
-
-**Environment Variables**:
-- `.env` file support (for API keys)
-- `backend/config.py` - Environment variable usage
-
-### ✅ Usage Examples and Demonstrations
-
-**Usage Documentation**:
-- `README.md` - Usage section
-  - Generating email replies
-  - Extension usage
-  - Configuration options
-
-**API Examples**:
-- `README.md` - API testing with curl
-  - Health check example
-  - Reply generation example
-
-**Code Examples**:
-- `backend/models/schemas.py` - Pydantic model examples
-- Docstrings with usage examples
-
-**Demo Scripts**:
-- `test_backend.py` - Backend testing demonstration
-- `test_email_extraction.py` - Extraction testing
-
-### ✅ Troubleshooting Guide
-
-**Troubleshooting Sections**:
-- `README.md` - Comprehensive troubleshooting
-  - Backend issues
-  - Extension issues
-  - Generation issues
-  - Common solutions
-
-**Debugging Guides**:
-- `chrome-extension-v2/DEBUG_OUTLOOK.md` - Outlook-specific debugging
-- Browser console logging
-- Backend logging configuration
-
-**Common Issues Covered**:
-- ModuleNotFoundError
-- Qdrant database lock
-- Ollama connection issues
-- Extension not loading
-- Button not appearing
-- Low confidence scores
-
----
-
-## Project Structure
-
-```
-ai-automation-agent/
-├── backend/                          # FastAPI backend
-│   ├── api/                          # API endpoints
-│   │   └── routes.py                 # ✅ API routes with error handling
-│   ├── services/                     # Business logic
-│   │   ├── embedding_service.py      # ✅ With caching optimization
-│   │   ├── qdrant_service.py         # ✅ Vector database
-│   │   ├── graph_service.py          # ✅ Knowledge graph
-│   │   ├── ollama_service.py         # ✅ LLM integration
-│   │   ├── gemini_service.py          # ✅ Alternative LLM
-│   │   ├── rag_service.py            # ✅ Main orchestration
-│   │   └── cache_service.py          # ✅ Performance caching
-│   ├── models/                        # Data models
-│   │   └── schemas.py                # ✅ Pydantic models
-│   ├── tests/                        # ✅ Test suite
-│   │   ├── unit/                     # ✅ Unit tests
-│   │   │   ├── test_embedding_service.py
-│   │   │   ├── test_ollama_service.py
-│   │   │   ├── test_rag_service.py
-│   │   │   └── test_cache_service.py
-│   │   ├── integration/               # ✅ Integration tests
-│   │   │   ├── test_api_integration.py
-│   │   │   └── test_full_pipeline.py
-│   │   └── conftest.py               # ✅ Test fixtures
-│   ├── config.py                     # ✅ Configuration
-│   ├── main.py                       # ✅ FastAPI app
-│   └── requirements.txt              # ✅ Dependencies (includes pytest)
-│
-├── chrome-extension-v2/              # Modern Chrome extension
-│   ├── content.js                    # ✅ Gmail & Outlook integration
-│   ├── background.js                 # ✅ Service worker
-│   ├── popup.html/js                 # ✅ Settings UI
-│   ├── README.md                     # ✅ Extension docs
-│   ├── INSTALL.md                    # ✅ Quick install guide
-│   └── DEBUG_OUTLOOK.md              # ✅ Debugging guide
-│
-├── eval/                             # Evaluation pipeline
-│   ├── run_eval.py                   # ✅ Main evaluation script
-│   ├── evaluator.py                  # ✅ Evaluation orchestrator
-│   ├── metrics.py                    # ✅ Metric calculations
-│   ├── utils.py                      # ✅ Helper functions
-│   ├── generate_plots.py             # ✅ Visualization
-│   ├── validate_setup.py             # ✅ Setup validation
-│   ├── README.md                     # ✅ Quick start
-│   ├── EVAL_DOCUMENTATION.md         # ✅ Comprehensive guide
-│   ├── EVALUATION_RESULTS_FINAL.md   # ✅ Results summary
-│   └── results/                      # ✅ Results and plots
-│
-├── graphrag_local/                   # Knowledge base notebooks
-│   ├── graph_rag_updated2.ipynb      # ✅ Main notebook
-│   └── qdrant_data/                  # Vector database
-│
-├── data/                             # Datasets
-│   ├── golden_dataset_benchmark.json # ✅ Benchmark dataset
-│   ├── faq_updated.csv               # ✅ FAQ data
-│   └── generated_email_pairs.json    # ✅ Labeled emails
-│
-├── README.md                         # ✅ Main documentation (includes architecture & results)
-├── tutorial.md                       # ✅ This file - component mapping & tutorial guide
-├── pytest.ini                       # ✅ Test configuration
-└── requirements.txt                  # Root dependencies
-```
-
----
-
-## Quick Reference
-
-### Running Tests
+1. **Open Jupyter Notebook:**
 
 ```bash
-# All tests
+# Install Jupyter if you haven't already
+pip install jupyter
+
+# Start Jupyter
+jupyter notebook
+```
+
+2. **Navigate to the notebook:**
+
+Open `graphrag_local/graph_rag_updated2.ipynb` in your browser.
+
+3. **Run all cells:**
+
+Click **Cell → Run All** or press `Shift + Enter` through each cell.
+
+**What happens:**
+
+- ✅ Loads FAQ data from CSV
+- ✅ Loads email pairs from JSON
+- ✅ Creates NetworkX knowledge graph with:
+  - Topics (email subjects/themes)
+  - Intents (what the email is asking for)
+  - Artifacts (specific information mentioned)
+- ✅ Creates Qdrant collections:
+  - `knowledge_space`: FAQs and graph node embeddings
+  - `writing_style`: Your reply examples for style matching
+- ✅ Generates embeddings and indexes everything
+
+**Expected output:**
+
+You should see progress messages like:
+```
+Loading FAQs...
+Building graph...
+Creating Qdrant collections...
+Indexing data...
+✅ Knowledge base ready!
+```
+
+4. **Important:** Close the notebook before proceeding (Qdrant locks the database when notebooks are open).
+
+---
+
+## Step 3: Set Up Backend
+
+The backend is a FastAPI server that handles email processing and reply generation.
+
+### 3.1 Clone and Navigate to Project
+
+```bash
+git clone <your-repo-url>
+cd ai-automation-agent
+```
+
+### 3.2 Create Virtual Environment
+
+**Option A: Using Python venv (Recommended)**
+
+```bash
+python3 -m venv email-agent
+source email-agent/bin/activate  # macOS/Linux
+# OR
+email-agent\Scripts\activate    # Windows
+```
+
+**Option B: Using Conda**
+
+```bash
+conda create -n graph_rag python=3.10 -y
+conda activate graph_rag
+```
+
+### 3.3 Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs:
+- FastAPI and Uvicorn (web server)
+- Qdrant client (vector database)
+- NetworkX (graph operations)
+- Sentence-transformers (embeddings)
+- Ollama Python client
+- And other dependencies
+
+**Verify installation:**
+```bash
+pip list | grep fastapi
+```
+
+### 3.4 Configure Backend
+
+Edit `backend/config.py` if needed:
+
+```python
+# Default settings (usually work out of the box)
+QDRANT_HOST = "localhost"
+QDRANT_PORT = 6333
+OLLAMA_BASE_URL = "http://localhost:11434"
+```
+
+### 3.5 Start Backend Server
+
+**Option A: Using the startup script (Recommended)**
+
+```bash
+chmod +x start_backend.sh
+./start_backend.sh
+```
+
+**Option B: Manual start**
+
+```bash
+source email-agent/bin/activate  # Activate venv first
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8001 --reload
+```
+
+**Success indicators:**
+
+You should see:
+```
+INFO:     Starting Graph RAG Email Assistant API...
+INFO:     All services initialized successfully!
+INFO:     Uvicorn running on http://0.0.0.0:8001
+INFO:     Application startup complete.
+```
+
+### 3.6 Test Backend
+
+Open a new terminal and test:
+
+```bash
+curl http://localhost:8001/api/health
+```
+
+Expected response:
+```json
+{"status":"healthy","services":{"ollama":true,"qdrant":true}}
+```
+
+If you see errors, check the [Troubleshooting](#troubleshooting) section.
+
+---
+
+## Step 4: Install Chrome Extension
+
+The Chrome extension adds the "Generate Reply" button to Gmail and Outlook.
+
+### 4.1 Load Extension
+
+1. **Open Chrome Extensions:**
+
+Navigate to `chrome://extensions/` in your browser.
+
+2. **Enable Developer Mode:**
+
+Toggle the switch in the top-right corner.
+
+3. **Load Extension:**
+
+- Click **"Load unpacked"**
+- Navigate to your project directory
+- Select the `chrome-extension-v2` folder
+- Click **"Select"**
+
+4. **Verify Installation:**
+
+You should see the extension appear with a 📧 icon.
+
+### 4.2 Configure Extension
+
+1. **Click the extension icon** in Chrome's toolbar.
+
+2. **Set API URL:**
+
+Ensure it's set to: `http://localhost:8001/api`
+
+3. **Test Connection:**
+
+Click **"Test Connection"** button.
+
+**Success:** You should see "✅ Backend online and healthy"
+
+**If connection fails:**
+- Verify backend is running (Step 3.5)
+- Check the API URL matches your backend port
+- Check browser console (F12) for errors
+
+### 4.3 Grant Permissions
+
+The extension needs permission to:
+- Access Gmail and Outlook pages
+- Send requests to your local backend
+
+These permissions are automatically requested when you load the extension.
+
+---
+
+## Step 5: Generate Your First Reply
+
+Now for the fun part - generating your first AI-powered email reply!
+
+### 5.1 Using Gmail
+
+1. **Open Gmail:**
+
+Go to [mail.google.com](https://mail.google.com)
+
+2. **Open an Email:**
+
+Click on any email in your inbox.
+
+3. **Click Reply:**
+
+Click the **"Reply"** button in Gmail.
+
+4. **Find the Generate Button:**
+
+Look for the **"🤖 Generate Reply"** button near the reply box. It appears automatically after a few seconds.
+
+5. **Generate Reply:**
+
+Click **"🤖 Generate Reply"**
+
+**What happens:**
+- Extension extracts email content
+- Sends to backend for processing
+- Backend:
+  - Classifies intent and artifacts
+  - Searches FAQs for relevant content
+  - Retrieves graph context
+  - Finds style examples matching your writing
+  - Generates reply using Llama 3
+- Reply appears in the text box
+
+6. **Review and Edit:**
+
+The generated reply includes:
+- Contextual information from FAQs
+- Your writing style
+- Relevant graph relationships
+
+Edit as needed, then send!
+
+### 5.2 Using Outlook
+
+1. **Open Outlook:**
+
+Go to [outlook.live.com](https://outlook.live.com) or [outlook.office.com](https://outlook.office.com)
+
+2. **Follow the same steps** as Gmail (open email → Reply → Generate)
+
+The extension works identically for both email providers.
+
+### 5.3 Understanding the Generated Reply
+
+The system uses:
+
+- **FAQ Matches:** Relevant information from your knowledge base
+- **Graph Context:** Related topics and relationships
+- **Style Examples:** Your previous replies for tone matching
+- **Intent Classification:** Understanding what the email is asking for
+
+You'll see a confidence score indicating how well the system understood the context.
+
+---
+
+## Troubleshooting
+
+### Backend Won't Start
+
+**Problem:** Backend fails to start or shows errors.
+
+**Solutions:**
+
+1. **Check Ollama is running:**
+```bash
+ollama list
+# If empty, start Ollama:
+ollama serve
+```
+
+2. **Check Qdrant is running:**
+```bash
+curl http://localhost:6333/health
+# If fails, start Qdrant:
+qdrant
+```
+
+3. **Check Python version:**
+```bash
+python3 --version  # Should be 3.10+
+```
+
+4. **Reinstall dependencies:**
+```bash
+pip install -r requirements.txt --upgrade
+```
+
+5. **Check port availability:**
+```bash
+# macOS/Linux
+lsof -i :8001
+# Windows
+netstat -ano | findstr :8001
+```
+
+### Extension Button Not Appearing
+
+**Problem:** "Generate Reply" button doesn't show up.
+
+**Solutions:**
+
+1. **Refresh the page:**
+   - Press `Cmd/Ctrl + R` to reload Gmail/Outlook
+
+2. **Check extension is enabled:**
+   - Go to `chrome://extensions/`
+   - Ensure extension is enabled (toggle ON)
+
+3. **Check browser console:**
+   - Press `F12` to open DevTools
+   - Look for errors in Console tab
+   - Common issues: CORS errors, connection failures
+
+4. **Verify backend connection:**
+   - Click extension icon
+   - Test connection
+   - Ensure backend is running
+
+5. **Wait a few seconds:**
+   - Button appears after page loads
+   - May take 2-3 seconds
+
+### Low Quality Replies
+
+**Problem:** Generated replies don't make sense or are generic.
+
+**Solutions:**
+
+1. **Check knowledge base:**
+   - Ensure Step 2 completed successfully
+   - Verify Qdrant has data:
+   ```bash
+   curl http://localhost:6333/collections
+   ```
+
+2. **Check FAQ data:**
+   - Ensure `data/faq_updated.csv` has relevant FAQs
+   - More FAQs = better context
+
+3. **Check email pairs:**
+   - Ensure `data/generated_email_pairs.json` has examples
+   - More examples = better style matching
+
+4. **Adjust confidence threshold:**
+   - Edit `backend/config.py`
+   - Lower thresholds for more aggressive retrieval
+
+### Qdrant Database Lock
+
+**Problem:** "Database is locked" error.
+
+**Solutions:**
+
+1. **Close Jupyter notebooks:**
+   - Notebooks lock Qdrant when open
+   - Close all notebooks before starting backend
+
+2. **Restart Qdrant:**
+```bash
+# Stop Qdrant (Ctrl+C)
+# Start again:
+qdrant
+```
+
+### Ollama Connection Errors
+
+**Problem:** "Cannot connect to Ollama" errors.
+
+**Solutions:**
+
+1. **Verify Ollama is running:**
+```bash
+ollama list
+```
+
+2. **Check Ollama URL:**
+   - Default: `http://localhost:11434`
+   - Verify in `backend/config.py`
+
+3. **Restart Ollama:**
+```bash
+# Stop Ollama (Ctrl+C)
+ollama serve
+```
+
+---
+
+## Next Steps
+
+Congratulations! You've successfully set up the AI Email Automation Agent. Here's what to explore next:
+
+### Customization
+
+1. **Add More FAQs:**
+   - Edit `data/faq_updated.csv`
+   - Rebuild knowledge base (Step 2)
+
+2. **Add Email Examples:**
+   - Add more pairs to `data/generated_email_pairs.json`
+   - Improves style matching
+
+3. **Adjust Configuration:**
+   - Edit `backend/config.py` for:
+     - Retrieval parameters
+     - Confidence thresholds
+     - Model settings
+
+### Advanced Usage
+
+1. **Run Evaluations:**
+   - See `eval/README.md` for evaluation pipeline
+   - Test system performance on your data
+
+2. **Modify Prompts:**
+   - Edit prompts in `backend/services/ollama_service.py`
+   - Customize reply generation style
+
+3. **Add New Intents:**
+   - Update `KNOWN_INTENTS` in `backend/config.py`
+   - Retrain knowledge base
+
+### Development
+
+1. **Run Tests:**
+```bash
 pytest
-
-# Unit tests only
-pytest backend/tests/unit/
-
-# Integration tests only
-pytest backend/tests/integration/
-
-# With coverage report
+# Or with coverage:
 pytest --cov=backend --cov-report=html
 ```
 
-### Key Files by Category
+2. **API Documentation:**
+   - Visit `http://localhost:8001/docs` when backend is running
+   - Interactive API documentation
 
-**Code Quality**:
-- Tests: `backend/tests/`
-- Error Handling: `backend/api/routes.py`, `backend/services/*.py`
-- Optimization: `backend/services/cache_service.py`
-- Documentation: `README.md`, `tutorial.md`
-
-**Functionality**:
-- Core Logic: `backend/services/rag_service.py`
-- API: `backend/api/routes.py`
-- Extension: `chrome-extension-v2/`
-- Configuration: `backend/config.py`
-
-**Experiments**:
-- Evaluation: `eval/run_eval.py`
-- Metrics: `eval/metrics.py`
-- Results: `eval/results/`
-- Notebooks: `graphrag_local/*.ipynb`
-
-**Documentation**:
-- Setup: `README.md`
-- Architecture: `README.md` (Architecture section)
-- Component Map: `tutorial.md` (this file)
-- Extension: `chrome-extension-v2/README.md`
-- Evaluation: `eval/EVAL_DOCUMENTATION.md`
-
-### Metrics Coverage
-
-✅ **Code Quality (8%)**: Complete
-- Clean code structure ✅
-- Comprehensive documentation ✅
-- Unit tests ✅
-- Code optimization ✅
-
-✅ **Functionality (8%)**: Complete
-- Feature implementation ✅
-- Error handling ✅
-- Performance optimization ✅
-- Integration testing ✅
-
-✅ **Experiment Results (7%)**: Complete
-- Reproducible experiments ✅
-- Documented setup ✅
-- Clear results presentation ✅
-- Analysis scripts/notebooks ✅
-
-✅ **Step-by-Step Tutorial (7%)**: Complete
-- Installation instructions ✅
-- Environment setup ✅
-- Usage examples ✅
-- Troubleshooting guide ✅
-
-**Total: 30/30 (100%)**
+3. **Check Logs:**
+   - Backend logs show detailed processing
+   - Useful for debugging
 
 ---
 
-## Summary
+## Getting Help
 
-This project has comprehensive coverage across all evaluation criteria:
+If you encounter issues not covered here:
 
-1. **Code Quality**: Well-structured, documented, tested, and optimized
-2. **Functionality**: Fully implemented with robust error handling and integration tests
-3. **Experiments**: Reproducible, well-documented, with clear results
-4. **Tutorials**: Complete installation, setup, usage, and troubleshooting guides
+1. **Check the main README:** `README.md` has detailed documentation
+2. **Review extension docs:** `chrome-extension-v2/README.md`
+3. **Check evaluation docs:** `eval/README.md`
+4. **Browser console:** Press F12 for detailed error messages
+5. **Backend logs:** Check terminal where backend is running
 
-All components are properly organized, documented, and tested. The project is production-ready with comprehensive test coverage and optimization features.
+---
 
+**Happy emailing! 🚀**
