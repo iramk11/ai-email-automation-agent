@@ -49,6 +49,20 @@ python -m uvicorn backend.main:app --host 0.0.0.0 --port 8001 --reload
 4. Look for **"🤖 Generate Reply"** button
 5. Click to generate!
 
+## 📸 Visual Guide
+
+![Extension Screenshot 1](../images/1.png)
+
+![Extension Screenshot 2](../images/2.png)
+
+![Extension Screenshot 3](../images/3.png)
+
+![Extension Screenshot 4](../images/4.png)
+
+![Extension Screenshot 5](../images/5.png)
+
+![Extension Screenshot 6](../images/6.png)
+
 ## 🐛 Troubleshooting
 
 **Backend not starting?**
@@ -60,7 +74,7 @@ ollama list
 ollama serve
 
 # Check dependencies
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 ```
 
 **Extension not working?**

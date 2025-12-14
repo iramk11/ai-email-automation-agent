@@ -6,7 +6,11 @@ Comprehensive benchmarking pipeline for the AI Email Automation Agent.
 
 1. **Install dependencies**:
    ```bash
-   pip install -r eval/requirements.txt
+   # Install all dependencies (including evaluation dependencies)
+   pip install -r requirements.txt
+   
+   # Or install only evaluation dependencies (if backend already installed)
+   pip install rouge-score mauve-text pandas scikit-learn torch transformers
    ```
 
 2. **Validate setup**:
@@ -22,7 +26,7 @@ Comprehensive benchmarking pipeline for the AI Email Automation Agent.
 ## Documentation
 
 - **[EVAL_DOCUMENTATION.md](EVAL_DOCUMENTATION.md)**: Comprehensive guide to all metrics and usage
-- **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)**: Implementation details and design decisions
+- Implementation details are covered in `EVAL_DOCUMENTATION.md`
 
 ## Metrics
 

@@ -16,7 +16,7 @@ source email-agent/bin/activate
 
 # Install dependencies
 echo "📥 Installing dependencies..."
-pip install -r backend/requirements.txt --quiet
+pip install -r requirements.txt --quiet
 
 # Check if Ollama is running
 echo "🔍 Checking Ollama..."

@@ -4,6 +4,7 @@ Embedding service for converting text to vectors.
 from sentence_transformers import SentenceTransformer
 from typing import List
 import logging
+from backend.services.cache_service import cached_embedding
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +27,11 @@ class EmbeddingService:
             logger.error(f"Failed to load embedding model: {e}")
             raise
     
+    @cached_embedding
     def encode(self, text: str) -> List[float]:
         """
         Encode a single text into a vector.
+        Uses caching to avoid recomputing embeddings for the same text.
         
         Args:
             text: Input text to embed

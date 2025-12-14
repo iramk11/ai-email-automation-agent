@@ -39,6 +39,20 @@ A modern, minimalistic Chrome extension for AI-powered email reply generation us
    - Look for the **"🤖 Generate Reply"** button
    - Click to generate AI-powered draft!
 
+## 📸 Screenshots
+
+![Extension Screenshot 1](images/1.png)
+
+![Extension Screenshot 2](images/2.png)
+
+![Extension Screenshot 3](images/3.png)
+
+![Extension Screenshot 4](images/4.png)
+
+![Extension Screenshot 5](images/5.png)
+
+![Extension Screenshot 6](images/6.png)
+
 ## 📋 Supported Email Providers
 
 ### Gmail
